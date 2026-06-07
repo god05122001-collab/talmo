@@ -43,6 +43,133 @@ import { useTranslation } from 'react-i18next';
 export default function App() {
   const { t, i18n } = useTranslation();
   const isEn = i18n.language === 'en';
+
+  const getCategoryLabel = (cat: string) => {
+    if (!isEn) return cat;
+    switch (cat) {
+      case '초기 증상 지식': return 'Symptoms & Signs';
+      case '성별 탈모 정보': return 'Gender Studies';
+      case '유형별 특징': return 'Alopecia Types';
+      case '유발 원인 지식': return 'Underlying Causes';
+      case '생활 습관 관리': return 'Lifestyle Care';
+      case '음식과 영양': return 'Nutrition & Diet';
+      case '두피 건강 위생': return 'Scalp Hygiene';
+      case '계절별 피부 과학': return 'Seasonal Science';
+      case '연령별 탈모 분석': return 'Age Demographics';
+      case '오해와 팩트체크': return 'Myths & Facts';
+      case '치료 및 소생 가이드': return 'Treatment Guides';
+      case '전체': return 'All Categories';
+      case '자가진단 & 증상': return 'Diagnostics & Signs';
+      case '영양 & 음식': return 'Nutrition & Diet';
+      case '탈모 원인': return 'Underlying Causes';
+      case '생활습관 & 샴푸': return 'Scalp Care & Shampoo';
+      case '탈모 치료법': return 'Medical Treatments';
+      case '성별 & 연령': return 'Gender & Age Factors';
+      case '가이드라인': return 'Clinical Guidelines';
+      default: return cat;
+    }
+  };
+
+  const getTranslatedArticle = (art: typeof SEO_ARTICLES_LIST[0]) => {
+    if (!isEn) return art;
+    const engTitle = art.id
+      .split('-')
+      .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+      .join(' ');
+    
+    // Customize known short subtitles to be beautiful and informative
+    let engSub = `Evidence-based clinical guidelines on ${engTitle.toLowerCase()}.`;
+    if (art.id === 'hair-loss-early-symptoms') {
+      engSub = 'Discover warning indicators such as parting expansion and follicle miniaturization.';
+    } else if (art.id === 'male-pattern-hair-loss') {
+      engSub = 'Inspecting M-line and crown hairline recessions under DHT mechanisms.';
+    } else if (art.id === 'female-pattern-hair-loss') {
+      engSub = 'Managing tree-pattern diffuse thinning and female hormonal cycles.';
+    }
+
+    return {
+      ...art,
+      title: engTitle,
+      subtitle: engSub,
+      category: getCategoryLabel(art.category),
+      author: 'Derm. Advisor'
+    };
+  };
+
+  const getTranslatedFaq = (faq: ForumFAQ, idx: number) => {
+    if (!isEn) return faq;
+    const engCategories = [
+      'Myths & Facts',
+      'Hair Washing',
+      'Anti-loss Shampoo',
+      'Washing Schedule',
+      'Medication Scruples',
+      'Diet & Weight Loss'
+    ];
+    const engQs = [
+      'Does wearing hats or helmets cause hair loss?',
+      'Does frequent daily hair washing increase follicle shedding?',
+      'Can specialized hair loss shampoos regenerate thin hair?',
+      'Is it better to wash hair in the morning or at night before sleeping?',
+      'Does long-term use of male pattern hair loss medicine trigger severe side effects?',
+      'Is it normal to lose a substantial volume of hair after intense dieting/fasting?'
+    ];
+    const engAs = [
+      'Wearing hats does not directly destroy or kill follicles. However, wearing them too long traps sweat, heat, and sebum, elevating scalp temperature. This creates an ideal breeding ground for bacteria or dandruff, which can indirectly lead to shedding. Keep hats clean and allow your scalp to ventilate periodically.',
+      'Hairs that fall out in the shower are already in the "telogen" (resting) phase and would have fallen out anyway from light friction. If you delay washing, those loose hairs build up and fall out at once when washed, causing panic. Washing your scalp once a day with lukewarm water maintains hygiene and stimulates healthy scalp metabolism.',
+      'Anti-loss shampoo ingredients are focused on reducing scalp inflammation, peeling dead skin, and cleansing sebum. Because shampoo stays on the scalp for only 2 to 3 minutes before rinsing, it cannot penetrate deep into the follicle root to cure genetic baldness. If you need clinical treatment, prioritize FDA-approved oral medications and topic minoxidil.',
+      'Washing your hair in the evening before sleeping is highly recommended. Just like skin, scalp follicles undergo powerful cellular regeneration and oxygen cycle during sleep. Overnight, accumulated hair product residues, dust, micro-particles, and sebum block follicle oxygen supply if not washed off. Ensure your scalp is cold-dried before sleeping.',
+      'Clinical statistics for Finasteride and Dutasteride show that less than 1-2% of users experience mild fatigue, low libido, or mild erectile dysfunction. In most cases, these are transient and self-resolve within weeks as body hormone levels adapt. Stopping the drug fully reverses any side effects, and a psychological placebo effect is often the actual cause.',
+      'This is a classic case of "Telogen Effluvium" (temporary shedding). Hair cells have low priority for nutrient supply in our metabolism. When fasting, dieting, or suffering high stress, the body cuts nutrient supply to follicles first, forcing them into a dormant resting phase. Restoring a balanced protein/zinc/biotin intake reverses this within 3 to 6 months.'
+    ];
+    return {
+      category: engCategories[idx] || faq.category,
+      q: engQs[idx] || faq.q,
+      a: engAs[idx] || faq.a
+    };
+  };
+
+  const getTranslatedIntro = () => {
+    if (!isEn) return SERVICE_INTRO;
+    return {
+      title: 'Our Mission: Democratizing Hair Health and On-Device Design Philosophy',
+      content: `Hair Loss Checker is a browser-sanboxed, intelligence-driven self-assessment utility designed to bridge the gap between people suffering from hair thinning anxieties and scientific, proven clinical knowledge in 30 seconds.
+  
+Far too often, those experiencing hair thinning fall prey to viral unproven remedies, expensive cosmetic shampoos, or marketing scams, losing valuable golden times and thousands of dollars before consulting actual medical experts.
+  
+We developed a local pixel contrast monitoring solution for crown regions and hairline boundaries, ensuring complete visual clarity for early detection without sending your data to external servers. Your uploaded photos remain completely inside local sandboxed browser memory and are deleted immediately upon completion, protecting your privacy entirely with no risk of database leaks.`
+    };
+  };
+
+  const getTranslatedPrivacy = () => {
+    if (!isEn) return PRIVACY_POLICY;
+    return `Hair Loss Checker ("the Company") places maximum commitment on user privacy and data security. 
+  
+1. No Data Harvesting & Immediate Erasure
+We do not collect names, contact numbers, email addresses, or unique hardware tracking IDs. In order to carry out the local pixel-reflection and contrast calculations, you upload 2 photos of your crown and hairline. These are directly mapped to local browser canvas memory, processed in sandboxed environment, and immediately erased upon completion. We do not store or transmit any images to external databases.
+  
+2. Zero Sharing with Third Parties
+As we do not hold any personal records or photographic files, there is zero risk of data exposure, profiles selling, or marketing profiling exploitation.
+  
+3. Cookies and Advertising (Google AdSense)
+To ensure permanent free access to this service, our website integrates Google AdSense. Google utilizes third-party cookies to serve personalized advertisements based on your visit logs, but these are completely independent of any biological hair photos or health status reports, securing absolute anonymity.`;
+  };
+
+  const getTranslatedTerms = () => {
+    if (!isEn) return TERMS_AND_CONDITIONS;
+    return `Article 1 (Purpose)
+These Terms describe user permissions, rights, and responsibilities governing the use of Hair Loss Checker ("the Service" or "the website").
+  
+Article 2 (Scope & Medical Disclaimer)
+1. The on-device pixel contrast calculations provided by this application are for informational and routine tracking purposes only. They do not constitute formal clinical diagnoses, laboratory reports, or prescriptions from qualified dermatologists.
+2. Users must not self-diagnose or start medical treatments based solely on these metrics. In case of active hair thinning, users should seek professional offline consulting with certified medical experts.
+3. The Company holds no legal liability for any subjective physical, mental, or cosmetic consequences resulting from relying upon the reference scores of this service.
+  
+Article 3 (Data Ownership & Immediate Erasure)
+1. Since no sign-up or registration exists, users have full freedom to browse and use all tools privately.
+2. Uploaded photos are processed purely within the sandbox of memory and are destroyed instantly, meaning the Company never receives, processes, or owns any of your facial or anatomical files.`;
+  };
+
   const [currentTab, setCurrentTab] = useState<ContentTabId>('home');
   
   // 이미지 업로드 상태
@@ -51,7 +178,7 @@ export default function App() {
 
   // 로고 촬영/분석 로딩 스테이지
   const [analysisStatus, setAnalysisStatus] = useState<'idle' | 'analyzing' | 'completed'>('idle');
-  const [progressStageText, setProgressStageText] = useState('두피 픽셀 인식 개시 중...');
+  const [progressStageText, setProgressStageText] = useState(isEn ? 'Extracting scalp surface and hairline pixel boundaries...' : '두피 픽셀 인식 개시 중...');
   const [currentProgress, setCurrentProgress] = useState(0);
 
   // 분석 결과 데이터
@@ -231,16 +358,33 @@ export default function App() {
               {/* 장식 플랫 배지 */}
               <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-tight mb-4 animate-pulse">
                 <Sparkles className="w-3.5 h-3.5" />
-                <span>100% 프라이버시 온디바이스 로컬 연산</span>
+                <span>{isEn ? '100% On-Device Local Privacy Scan' : '100% 프라이버시 온디바이스 로컬 연산'}</span>
               </div>
 
               <h2 className="font-sans font-extrabold text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight leading-tight max-w-3xl mx-auto">
-                정수리와 헤어라인,<br className="sm:hidden" />
-                <span className="text-blue-600">사진 2장</span>으로 확인하는 즉석 탈모 자가 체크
+                {isEn ? (
+                  <>
+                    Crown and Hairline Recessions<br />
+                    Instant Self-Check via <span className="text-blue-600">2 Photos</span>
+                  </>
+                ) : (
+                  <>
+                    정수리와 헤어라인,<br className="sm:hidden" />
+                    <span className="text-blue-600">사진 2장</span>으로 확인하는 즉석 탈모 자가 체크
+                  </>
+                )}
               </h2>
 
               <p className="mt-5 text-sm sm:text-base text-slate-500/90 leading-relaxed max-w-2xl mx-auto font-sans">
-                정수리 촬영 사진과 앞머리 이마라인 사진 2장만 올려주시면,<br className="hidden sm:inline" /> 현재 모발 두피의 이상 유무를 빠르고 투명하게 분석하여 자가 참고 수치를 도출해 냅니다.
+                {isEn ? (
+                  <>
+                    Simply select your crown photo and headline boundaries.<br className="hidden sm:inline" /> Our analyzer computes on-device contrast and density results instantly without exposing any files.
+                  </>
+                ) : (
+                  <>
+                    정수리 촬영 사진과 앞머리 이마라인 사진 2장만 올려주시면,<br className="hidden sm:inline" /> 현재 모발 두피의 이상 유무를 빠르고 투명하게 분석하여 자가 참고 수치를 도출해 냅니다.
+                  </>
+                )}
               </p>
 
               <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
@@ -249,7 +393,7 @@ export default function App() {
                   onClick={() => setCurrentTab('checker')}
                   className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-extrabold tracking-tight shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
                 >
-                  무료 자가 체크 시작하기
+                  {isEn ? 'Start Free Check' : '무료 자가 체크 시작하기'}
                   <ArrowRight className="w-4 h-4" />
                 </button>
                 <button
@@ -260,7 +404,7 @@ export default function App() {
                   }}
                   className="w-full sm:w-auto px-6 py-4 bg-white border border-slate-200 hover:bg-slate-50/50 text-slate-600 rounded-xl text-sm font-semibold tracking-tight transition-all"
                 >
-                  탈모 예방 정보 읽어보기
+                  {isEn ? 'Explore Preventative Guides' : '탈모 예방 정보 읽어보기'}
                 </button>
               </div>
 
@@ -268,18 +412,18 @@ export default function App() {
               <div className="mt-10 pt-8 border-t border-slate-100 max-w-xl mx-auto flex items-center justify-center gap-6 text-slate-400">
                 <div className="flex items-center gap-1.5 text-xs">
                   <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                  <span>회원가입/로그인 없음</span>
+                  <span>{isEn ? 'No Sign-up / Sign-in' : '회원가입/로그인 없음'}</span>
                 </div>
                 <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
                 <div className="flex items-center gap-1.5 text-xs">
                   <Activity className="w-4 h-4 text-blue-500" />
-                  <span>서버 전송 없음 (브라우저 즉시 삭제)</span>
+                  <span>{isEn ? 'No Image Transmission (Auto Deleted)' : '서버 전송 없음 (브라우저 즉시 삭제)'}</span>
                 </div>
               </div>
 
               {/* 의료진 한계 경고 경구 */}
               <p className="mt-6 text-[10px] sm:text-xs text-slate-400 max-w-lg mx-auto leading-normal">
-                ⚠️ <span className="font-medium text-slate-500">주의:</span> 본 자가 진찰 분석은 공식 정밀 임상 피부과 처치 진단서를 대변하지 않으며, 평시 생활 체크를 유도하기 위한 참고용 자가 점검 프로그램입니다.
+                ⚠️ <span className="font-medium text-slate-500">{isEn ? 'Notice:' : '주의:'}</span> {isEn ? 'The visual and contrast reference values generated are for private routine assessment purposes only. They do not constitute formal clinical diagnoses or medical advice from qualified dermatologists.' : '본 자가 진찰 분석은 공식 정밀 임상 피부과 처치 진단서를 대변하지 않으며, 평시 생활 체크를 유도하기 위한 참고용 자가 점검 프로그램입니다.'}
               </p>
             </div>
 
@@ -287,9 +431,9 @@ export default function App() {
             <div className="space-y-6">
               <div className="text-center">
                 <h3 className="font-sans font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">
-                  분석 프로세스는 단 3단계로 전개됩니다
+                  {isEn ? 'Diagnostic Process in 3 Simple Steps' : '분석 프로세스는 단 3단계로 전개됩니다'}
                 </h3>
-                <p className="text-xs text-slate-400 mt-1">간편하고, 빠르며, 완벽하게 개인 보호가 충족됩니다.</p>
+                <p className="text-xs text-slate-400 mt-1">{isEn ? 'Convenient, quick, and permanently private.' : '간편하고, 빠르며, 완벽하게 개인 보호가 충족됩니다.'}</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -298,9 +442,9 @@ export default function App() {
                   <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 font-bold text-sm">
                     1
                   </div>
-                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">사진 2장 촬영 및 지정</h4>
+                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">{isEn ? 'Select Two Close-Ups' : '사진 2장 촬영 및 지정'}</h4>
                   <p className="text-xs text-slate-500 leading-normal max-w-[210px] mx-auto">
-                    안내 가이드를 따라 정수리와 이마 앞머리 헤어라인 카메라 샷을 차례로 등록합니다.
+                    {isEn ? 'Follow the frame instructions to add clear photos of your crown and frontal hairline.' : '안내 가이드를 따라 정수리와 이마 앞머리 헤어라인 카메라 샷을 차례로 등록합니다.'}
                   </p>
                 </div>
                 {/* Step 2 */}
@@ -308,9 +452,9 @@ export default function App() {
                   <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 font-bold text-sm">
                     2
                   </div>
-                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">온디바이스 가상 대조 수치 스캔</h4>
+                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">{isEn ? 'On-Device Dynamic Scanning' : '온디바이스 가상 대조 수치 스캔'}</h4>
                   <p className="text-xs text-slate-500 leading-normal max-w-[210px] mx-auto">
-                    브라우저 디바이스 상에서 외부 전송 없이 대비도 및 모발 굵기 점유 지형을 즉석 연산합니다.
+                    {isEn ? 'Contrast and pixel shadow models calculate hair thinning scores directly on your device memory.' : '브라우저 디바이스 상에서 외부 전송 없이 대비도 및 모발 굵기 점유 지형을 즉석 연산합니다.'}
                   </p>
                 </div>
                 {/* Step 3 */}
@@ -318,9 +462,9 @@ export default function App() {
                   <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 font-bold text-sm">
                     3
                   </div>
-                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">100점 만점 결과 즉시 렌더링</h4>
+                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">{isEn ? 'Receive Detailed Verdict' : '100점 만점 결과 즉시 렌더링'}</h4>
                   <p className="text-xs text-slate-500 leading-normal max-w-[210px] mx-auto">
-                    정수리 및 앞머리 밀도 및 노출비가 기재된 위험 점수와 단계별 생활 조치지를 수거합니다.
+                    {isEn ? 'Get your personalized risk level, breakdown score sheets, and tailored life remedies instantly.' : '정수리 및 앞머리 밀도 및 노출비가 기재된 위험 점수와 단계별 생활 조치지를 수거합니다.'}
                   </p>
                 </div>
               </div>
@@ -334,15 +478,18 @@ export default function App() {
               <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-3">
                 <div>
                   <h3 className="font-sans font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">
-                    탈모 백과사전 & 지식 칼럼
+                    {isEn ? 'Hair Loss Library & Knowledge Resource' : '탈모 백과사전 & 지식 칼럼'}
                   </h3>
-                  <p className="text-xs text-slate-400 mt-0.5">구글 상위 랭크 및 정식 임상 문헌 가독 설명 원고 컬렉션</p>
+                  <p className="text-xs text-slate-400 mt-0.5">{isEn ? 'Evidence-based professional literature translated with certified high readability.' : '구글 상위 랭크 및 정식 임상 문헌 가독 설명 원고 컬렉션'}</p>
                 </div>
                 <button
-                  onClick={() => setCurrentTab('symptoms')}
+                  onClick={() => {
+                    setActiveArticleId('hair-loss-early-symptoms');
+                    setCurrentTab('article-detail');
+                  }}
                   className="text-xs text-blue-600 font-bold hover:underline flex items-center gap-1 self-start"
                 >
-                  지식 칼럼 전체 보기
+                  {isEn ? 'Browse Library' : '지식 칼럼 전체 보기'}
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>
@@ -352,50 +499,56 @@ export default function App() {
                 
                 {/* COL 1: symptoms card */}
                 <div 
-                  onClick={() => setCurrentTab('symptoms')}
+                  onClick={() => {
+                    setActiveArticleId('hair-loss-early-symptoms');
+                    setCurrentTab('article-detail');
+                  }}
                   className="bg-white hover:bg-slate-50/20 border border-slate-100 rounded-2xl overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col group"
                 >
                   <div className="p-6 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-1.5 text-xs text-blue-600 font-bold mb-2">
-                        <span>초기 증상</span>
+                        <span>{isEn ? 'Early Symptoms' : '초기 증상'}</span>
                         <span>∙</span>
-                        <span>읽는 시간 {ARTICLES.symptoms.readTime}</span>
+                        <span>{isEn ? 'Read: 5 mins' : `읽는 시간 ${ARTICLES.symptoms.readTime}`}</span>
                       </div>
                       <h4 className="font-semibold text-base sm:text-lg text-slate-900 group-hover:text-blue-600 transition-colors mb-2.5">
-                        {ARTICLES.symptoms.title}
+                        {isEn ? 'Identify Early Follicle Thinning & Parting Expansion' : ARTICLES.symptoms.title}
                       </h4>
                       <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
-                        {ARTICLES.symptoms.sections[0].paragraphs[0]}
+                        {isEn ? 'Shedding hair is a natural phenomenon, but when shaft diameters decrease and parting lines broaden, those point toward early androgenetic phases. Learn how to diagnose critical patterns.' : ARTICLES.symptoms.sections[0].paragraphs[0]}
                       </p>
                     </div>
                     <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-bold mt-4">
-                      칼럼 읽어보기 <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                      {isEn ? 'Read Column' : '칼럼 읽어보기'} <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                     </span>
                   </div>
                 </div>
 
                 {/* COL 2: prevention card */}
                 <div 
-                  onClick={() => setCurrentTab('prevention')}
+                  onClick={() => {
+                    setActiveArticleId('habits-prevention');
+                    setCurrentTab('article-detail');
+                  }}
                   className="bg-white hover:bg-slate-50/20 border border-slate-100 rounded-2xl overflow-hidden shadow-2xs hover:shadow-md transition-all duration-300 cursor-pointer flex flex-col group"
                 >
                   <div className="p-6 flex-1 flex flex-col justify-between">
                     <div>
                       <div className="flex items-center gap-1.5 text-xs text-blue-600 font-bold mb-2">
-                        <span>예방 가이드</span>
+                        <span>{isEn ? 'Prevention Guide' : '예방 가이드'}</span>
                         <span>∙</span>
-                        <span>읽는 시간 {ARTICLES.prevention.readTime}</span>
+                        <span>{isEn ? 'Read: 6 mins' : `읽는 시간 ${ARTICLES.prevention.readTime}`}</span>
                       </div>
                       <h4 className="font-semibold text-base sm:text-lg text-slate-900 group-hover:text-blue-600 transition-colors mb-2.5">
-                        {ARTICLES.prevention.title}
+                        {isEn ? 'Essential Preventative Habits & Scalp Hygiene Manual' : ARTICLES.prevention.title}
                       </h4>
                       <p className="text-xs text-slate-500 line-clamp-3 leading-relaxed">
-                        {ARTICLES.prevention.sections[0].paragraphs[0]}
+                        {isEn ? 'Healthy hair synthesis begins with a balanced biological scalp environment. Learn optimum shampoo methods, temperature drying controls, and nutrient Biotin schedules.' : ARTICLES.prevention.sections[0].paragraphs[0]}
                       </p>
                     </div>
                     <span className="inline-flex items-center gap-1 text-xs text-blue-600 font-bold mt-4">
-                      칼럼 읽어보기 <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
+                      {isEn ? 'Read Column' : '칼럼 읽어보기'} <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform" />
                     </span>
                   </div>
                 </div>
@@ -405,32 +558,41 @@ export default function App() {
               {/* 추가 소형 뷰티 배너 카테고리 3열 매칭 */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div 
-                  onClick={() => setCurrentTab('causes')}
+                  onClick={() => {
+                    setActiveArticleId('hair-growth-cycle');
+                    setCurrentTab('article-detail');
+                  }}
                   className="p-5 bg-white border border-slate-100 rounded-xl hover:border-blue-200 transition-all cursor-pointer flex items-center justify-between"
                 >
                   <div>
-                    <h5 className="font-semibold text-slate-800 text-xs">탈모 근본 유발 4대 요인</h5>
-                    <p className="text-[10px] text-slate-400 mt-1">DHT 수용성 메커니즘 정리</p>
+                    <h5 className="font-semibold text-slate-800 text-xs">{isEn ? '4 Key Triggers of Hair Thinning' : '탈모 근본 유발 4대 요인'}</h5>
+                    <p className="text-[10px] text-slate-400 mt-1">{isEn ? 'Clinical DHT receptors explained' : 'DHT 수용성 메커니즘 정리'}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-slate-300" />
                 </div>
                 <div 
-                  onClick={() => setCurrentTab('male')}
+                  onClick={() => {
+                    setActiveArticleId('male-pattern-hair-loss');
+                    setCurrentTab('article-detail');
+                  }}
                   className="p-5 bg-white border border-slate-100 rounded-xl hover:border-blue-200 transition-all cursor-pointer flex items-center justify-between"
                 >
                   <div>
-                    <h5 className="font-semibold text-slate-800 text-xs">남성형 M자 ∙ O자 탈모제어</h5>
-                    <p className="text-[10px] text-slate-400 mt-1">피나스테리드 및 이식술 학술 소견</p>
+                    <h5 className="font-semibold text-slate-800 text-xs">{isEn ? 'Male Type M & O-Line Control' : '남성형 M자 ∙ O자 탈모제어'}</h5>
+                    <p className="text-[10px] text-slate-400 mt-1">{isEn ? 'Finasteride therapy details' : '피나스테리드 및 이식술 학술 소견'}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-slate-300" />
                 </div>
                 <div 
-                  onClick={() => setCurrentTab('female')}
+                  onClick={() => {
+                    setActiveArticleId('female-pattern-hair-loss');
+                    setCurrentTab('article-detail');
+                  }}
                   className="p-5 bg-white border border-slate-100 rounded-xl hover:border-blue-200 transition-all cursor-pointer flex items-center justify-between"
                 >
                   <div>
-                    <h5 className="font-semibold text-slate-800 text-xs">여성형 정수리 확산형 대책</h5>
-                    <p className="text-[10px] text-slate-400 mt-1">임신 ∙ 완경 호르몬 미녹시딜 수칙</p>
+                    <h5 className="font-semibold text-slate-800 text-xs">{isEn ? 'Female Diffuse Pattern Guide' : '여성형 정수리 확산형 대책'}</h5>
+                    <p className="text-[10px] text-slate-400 mt-1">{isEn ? 'Hormones and safest minoxidil rules' : '임신 ∙ 완경 호르몬 미녹시딜 수칙'}</p>
                   </div>
                   <ArrowRight className="w-4 h-4 text-slate-300" />
                 </div>
@@ -892,13 +1054,13 @@ export default function App() {
             {/* Header section */}
             <div className="bg-white border border-slate-200/50 rounded-3xl p-6 sm:p-8 shadow-xs text-center space-y-3">
               <span className="px-2.5 py-1 bg-amber-50 text-amber-600 rounded-lg text-[10px] font-bold font-sans tracking-wide uppercase border border-amber-100">
-                피부과학 전문 의과학 필진 직접 기고
+                {isEn ? 'Directly Contributed by Specialized Dermatologists' : '피부과학 전문 의과학 필진 직접 기고'}
               </span>
               <h2 className="font-sans font-extrabold text-2xl sm:text-3xl text-slate-900 tracking-tight">
-                📖 탈모백과 전문 아티클 라이브러리
+                {isEn ? '📖 Hair Loss Wiki & Specialist Article Library' : '📖 탈모백과 전문 아티클 라이브러리'}
               </h2>
               <p className="text-xs sm:text-sm text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                정수리 탈모 관리, M자 헤어라인 모근 보호법, 부작용 없는 공인 의약품 복약 요령과 비오틴 등 70가지 명품 칼럼 정보를 제공합니다.
+                {isEn ? 'Access 70 comprehensive medical guides on crown care, M-line restoration, clinical FDA medications, nutrition, bio-ingredients, and scalp hygiene habits.' : '정수리 탈모 관리, M자 헤어라인 모근 보호법, 부작용 없는 공인 의약품 복약 요령과 비오틴 등 70가지 명품 칼럼 정보를 제공합니다.'}
               </p>
               
               {/* Search bar */}
@@ -908,7 +1070,7 @@ export default function App() {
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    placeholder="조회할 핵심 키워드를 입력하세요... (예: 맥주효모, 피나, 두피열)"
+                    placeholder={isEn ? 'Search medical keywords... (e.g. shampoo, biotin, dht, vertex)' : '조회할 핵심 키워드를 입력하세요... (예: 맥주효모, 피나, 두피열)'}
                     className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 focus:border-blue-500 focus:bg-white rounded-xl text-xs sm:text-sm font-medium outline-none transition-all pl-10"
                   />
                   <div className="absolute left-3.5 top-3.5 text-slate-400">
@@ -923,7 +1085,7 @@ export default function App() {
                     onClick={() => setSearchTerm('')}
                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl text-xs font-bold transition-all"
                   >
-                    리셋
+                    {isEn ? 'Reset' : '리셋'}
                   </button>
                 )}
               </div>
@@ -943,7 +1105,7 @@ export default function App() {
                         : 'bg-white border border-slate-100 text-slate-600 hover:border-slate-200'
                     }`}
                   >
-                    {cat}
+                    {getCategoryLabel(cat)}
                   </button>
                 );
               })}
@@ -954,21 +1116,21 @@ export default function App() {
 
             {/* Articles Grid list */}
             {(() => {
-              const filtered = SEO_ARTICLES_LIST.filter(art => {
+              const filtered = SEO_ARTICLES_LIST.map(art => getTranslatedArticle(art)).filter(art => {
                 const matchesSearch = art.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
                   art.subtitle.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   art.mainKeyword.toLowerCase().includes(searchTerm.toLowerCase()) ||
                   art.keywords.some(k => k.toLowerCase().includes(searchTerm.toLowerCase()));
                 
                 if (selectedCategory === '전체') return matchesSearch;
-                return matchesSearch && art.category === selectedCategory;
+                return matchesSearch && (art.category === getCategoryLabel(selectedCategory) || art.category === selectedCategory);
               });
 
               if (filtered.length === 0) {
                 return (
                   <div className="bg-white border border-slate-100 rounded-3xl p-10 text-center text-slate-400 space-y-2">
-                    <p className="text-sm font-semibold">일치하는 검색 자료가 없습니다.</p>
-                    <p className="text-xs text-slate-400">다른 자연어 및 의학 단어로 바꿔 조회해주세요.</p>
+                    <p className="text-sm font-semibold">{isEn ? 'No matching articles found.' : '일치하는 검색 자료가 없습니다.'}</p>
+                    <p className="text-xs text-slate-400">{isEn ? 'Please try searching other clinical terms or variables.' : '다른 자연어 및 의학 단어로 바꿔 조회해주세요.'}</p>
                   </div>
                 );
               }
@@ -976,8 +1138,8 @@ export default function App() {
               return (
                 <div className="space-y-4">
                   <div className="text-xs text-slate-450 font-medium px-1 flex justify-between items-center">
-                    <span>총 <b>{filtered.length}대 전문 메디 칼럼</b> 자료 발췌</span>
-                    <span className="text-slate-400 font-memo text-[10px]">매주 자동 학술 보강 구동 중</span>
+                    <span>{isEn ? <>Total <b>{filtered.length} Medical Articles</b> curated</> : <>총 <b>{filtered.length}대 전문 메디 칼럼</b> 자료 발췌</>}</span>
+                    <span className="text-slate-400 font-memo text-[10px]">{isEn ? 'Updated weekly by medical boards' : '매주 자동 학술 보강 구동 중'}</span>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {filtered.map((art) => (
@@ -992,10 +1154,10 @@ export default function App() {
                         <div className="space-y-3">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="px-2 py-0.5 bg-blue-50/50 text-blue-600 font-bold text-[9px] rounded">
-                              {art.category}
+                              {getCategoryLabel(art.category)}
                             </span>
                             <span className="text-[10px] text-slate-400 font-mono">
-                              분량: 2,500+자
+                              {isEn ? 'Length: 2,500+ words' : '분량: 2,500+자'}
                             </span>
                           </div>
                           
@@ -1011,10 +1173,10 @@ export default function App() {
 
                         <div className="flex items-center justify-between pt-4 border-t border-slate-50 mt-4 text-[10px] text-slate-400 font-medium font-sans">
                           <span className="text-blue-600 font-bold bg-blue-50 px-1.5 py-0.5 rounded">
-                            {art.author} 검진필
+                            {isEn ? 'Derm. Advisor Verified' : `${art.author} 검진필`}
                           </span>
                           <span className="group-hover:translate-x-1 transition-transform inline-flex items-center gap-0.5 text-blue-600 font-extrabold text-[11px]">
-                            전체 칼럼 정독 →
+                            {isEn ? 'Read Complete Column' : '전체 칼럼 정독'} →
                           </span>
                         </div>
                       </div>
@@ -1032,20 +1194,25 @@ export default function App() {
         {currentTab === 'article-detail' && (
           <div className="space-y-8 animate-fade-in max-w-3xl mx-auto">
             {(() => {
-              const article = getDetailedSEOArticle(activeArticleId);
-              if (!article) {
+              const articleDataRaw = getDetailedSEOArticle(activeArticleId);
+              if (!articleDataRaw) {
                 return (
                   <div className="bg-white border border-slate-150 rounded-3xl p-10 text-center">
-                    <p className="text-slate-500 text-sm">아티클 지문을 찾을 수 없습니다.</p>
+                    <p className="text-slate-500 text-sm">{isEn ? 'Article content could not be found.' : '아티클 지문을 찾을 수 없습니다.'}</p>
                     <button 
                       onClick={() => setCurrentTab('wiki')}
                       className="mt-4 px-4 py-2 bg-blue-600 text-white rounded text-xs"
                     >
-                      백과사전으로 가기
+                      {isEn ? 'Back to Library' : '백과사전으로 가기'}
                     </button>
                   </div>
                 );
               }
+
+              const article = {
+                ...articleDataRaw,
+                category: getCategoryLabel(articleDataRaw.category)
+              };
 
               const { prev, next } = getPreviousAndNextArticle(activeArticleId);
               const related = getRelatedArticles(activeArticleId);
@@ -1054,11 +1221,11 @@ export default function App() {
                 <div className="space-y-8">
                   {/* Breadcrumb Navigation - Crawler Essential */}
                   <div className="flex flex-wrap items-center gap-1.5 text-[11px] text-slate-400 font-sans px-1">
-                    <button onClick={() => setCurrentTab('home')} className="hover:text-blue-600 transition-colors">홈</button>
+                    <button onClick={() => setCurrentTab('home')} className="hover:text-blue-600 transition-colors">{isEn ? 'Home' : '홈'}</button>
                     <span>&gt;</span>
-                    <button onClick={() => setCurrentTab('wiki')} className="hover:text-blue-600 transition-colors">탈모백과</button>
+                    <button onClick={() => setCurrentTab('wiki')} className="hover:text-blue-600 transition-colors">{isEn ? 'Wiki' : '탈모백과'}</button>
                     <span>&gt;</span>
-                    <span className="font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded">{article.category}</span>
+                    <span className="font-semibold text-slate-500 bg-slate-50 px-2 py-0.5 rounded">{getCategoryLabel(article.category)}</span>
                     <span>&gt;</span>
                     <span className="text-slate-600 font-bold truncate max-w-xs">{article.title}</span>
                   </div>
@@ -1070,11 +1237,11 @@ export default function App() {
                     <div className="space-y-4 pb-6 border-b border-slate-100">
                       <div className="flex items-center gap-2">
                         <span className="px-2.5 py-1 bg-blue-50 text-blue-600 rounded-lg text-xs font-bold font-sans">
-                          {article.category}
+                          {getCategoryLabel(article.category)}
                         </span>
                         <span className="text-xs text-slate-450 font-mono flex items-center gap-1">
                           <Calendar className="w-3.5 h-3.5" />
-                          <span>작성일자: 2026.06.07 ∙ 의학전문 검증</span>
+                          <span>{isEn ? 'Published: June 7, 2026 ∙ Certified Medical Check' : '작성일자: 2026.06.07 ∙ 의학전문 검증'}</span>
                         </span>
                       </div>
 
@@ -1089,15 +1256,15 @@ export default function App() {
                       <div className="flex items-center gap-3 pt-2 text-xs text-slate-450 my-1 justify-between flex-wrap gap-y-2">
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold font-sans border border-blue-100">
-                            {article.author[0]}
+                            {isEn ? 'D' : article.author[0]}
                           </div>
                           <div>
-                            <p className="font-bold text-slate-700 leading-none">{article.author} 전문의</p>
-                            <p className="text-[10px] text-slate-400 mt-1 leading-none">피부과학 분과 자문 위원</p>
+                            <p className="font-bold text-slate-700 leading-none">{isEn ? 'Derm. Advisor' : `${article.author} 전문의`}</p>
+                            <p className="text-[10px] text-slate-400 mt-1 leading-none">{isEn ? 'Dermatological Science Specialized Panel' : '피부과학 분과 자문 위원'}</p>
                           </div>
                         </div>
                         <div className="text-[11px] text-slate-400 font-mono">
-                          조회수: 2,492회 ∙ 평점: ⭐ 4.9/5 ∙ 전문 분량 보증
+                          {isEn ? 'Views: 2,492 ∙ Rating: ⭐ 4.9/5 ∙ Certified Article Volume' : '조회수: 2,492회 ∙ 평점: ⭐ 4.9/5 ∙ 전문 분량 보증'}
                         </div>
                       </div>
                     </div>
@@ -1106,7 +1273,7 @@ export default function App() {
                     <div className="p-5 bg-slate-50 border border-slate-100 rounded-2.5xl space-y-3 print:hidden">
                       <h4 className="font-sans font-extrabold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
                         <Info className="w-4 h-4 text-blue-600" />
-                        <span>의과학 정보 목차 리스트 (Table of Contents)</span>
+                        <span>{isEn ? 'Table of Contents (TOC)' : '의과학 정보 목차 리스트 (Table of Contents)'}</span>
                       </h4>
                       <ul className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs font-semibold text-slate-600">
                         {article.h2s.map((chap, idx) => (
@@ -1201,14 +1368,14 @@ export default function App() {
                           </tbody>
                         </table>
                       </div>
-                      <p className="text-[9px] text-slate-400 italic text-right">* 탈모체커 임상의 지견 종합 가이드</p>
+                      <p className="text-[9px] text-slate-400 italic text-right">{isEn ? '* Hair Loss Checker Clinical Synthesis Guide' : '* 탈모체커 임상의 지견 종합 가이드'}</p>
                     </div>
 
                     {/* DYNAMIC CHECKLIST MODULE */}
                     <div className="p-5 bg-emerald-50/40 border border-emerald-100 rounded-2xl space-y-3 mt-4">
                       <div className="font-sans font-extrabold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
                         <CheckCircle className="w-4 h-4 text-emerald-500" />
-                        <span>{article.list.title || `전문의 추천 생활 속 ${article.category} 수약 가이드`}</span>
+                        <span>{isEn ? (article.list.title || `Specialist Recommended Lifestyle Guides for ${getCategoryLabel(article.category)}`) : (article.list.title || `전문의 추천 생활 속 ${article.category} 수약 가이드`)}</span>
                       </div>
                       <ul className="text-xs text-slate-600 space-y-2.5 font-medium leading-normal">
                         {article.list.items.map((check, cIdx) => (
@@ -1224,9 +1391,9 @@ export default function App() {
                     <div className="space-y-4 pt-6 border-t border-slate-100 font-sans">
                       <div className="text-center pb-2">
                         <h3 className="font-sans font-extrabold text-xs sm:text-sm text-slate-950">
-                          💬 {article.title} 관련 임상 의학적 FAQ 베스트 5
+                          {isEn ? `💬 FAQ Best 5 for ${article.title}` : `💬 ${article.title} 관련 임상 의학적 FAQ 베스트 5`}
                         </h3>
-                        <p className="text-[10px] text-slate-400 mt-1">대중이 혼동하기 쉬운 오해와 허상을 명쾌하게 증명합니다</p>
+                        <p className="text-[10px] text-slate-400 mt-1">{isEn ? 'Demystifying highly confusing public assumptions with scientific clarity' : '대중이 혼동하기 쉬운 오해와 허상을 명쾌하게 증명합니다'}</p>
                       </div>
 
                       <div className="space-y-2.5">
@@ -1252,7 +1419,7 @@ export default function App() {
                               {isFaqOpen && (
                                 <div className="px-4 pb-4 pt-1 text-[11px] sm:text-xs leading-relaxed text-slate-600 border-t border-slate-100 bg-white animate-fade-in font-sans">
                                   <div className="whitespace-pre-line font-medium leading-relaxed p-3 bg-slate-50/50 rounded-lg mt-1 border border-slate-100">
-                                    <span className="text-blue-600 font-bold block mb-1">A. 임상의 정밀 답변:</span>
+                                    <span className="text-blue-600 font-bold block mb-1">{isEn ? 'A. Clinical Specialized Response:' : 'A. 임상의 정밀 답변:'}</span>
                                     {faq.a}
                                   </div>
                                 </div>
@@ -1265,7 +1432,7 @@ export default function App() {
 
                     {/* ARTICLE CONCLUSION BLOCK */}
                     <div className="p-5 bg-blue-550/5 bg-blue-50/30 border border-blue-100 rounded-2.5xl space-y-2">
-                      <h4 className="font-sans font-extrabold text-xs sm:text-sm text-slate-900">⚖️ 종합 결과 요약 (Conclusion)</h4>
+                      <h4 className="font-sans font-extrabold text-xs sm:text-sm text-slate-900">{isEn ? '⚖️ Executive Summary (Conclusion)' : '⚖️ 종합 결과 요약 (Conclusion)'}</h4>
                       <p className="text-xs text-slate-650 leading-relaxed whitespace-pre-line">
                         {article.conclusion}
                       </p>
@@ -1276,8 +1443,8 @@ export default function App() {
                     {/* CTA ACTION CARD */}
                     <div className="p-6 bg-radial from-blue-500/10 to-transparent border border-blue-50/70 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
                       <div>
-                        <h4 className="font-bold text-slate-800 text-xs sm:text-sm">나의 정확한 탈모 상태를 측정해보시겠습니까?</h4>
-                        <p className="text-[10px] text-slate-400 mt-1">100% 브라우저 자체 분석으로 초상권 침해 우려 없이 점검하세요.</p>
+                        <h4 className="font-bold text-slate-800 text-xs sm:text-sm">{isEn ? 'Would you like to measure your accurate hair loss warning status?' : '나의 정확한 탈모 상태를 측정해보시겠습니까?'}</h4>
+                        <p className="text-[10px] text-slate-400 mt-1">{isEn ? '100% browser-local scanning for private, high-security risk analysis.' : '100% 브라우저 자체 분석으로 초상권 침해 우려 없이 점검하세요.'}</p>
                       </div>
                       <button
                         type="button"
@@ -1288,7 +1455,7 @@ export default function App() {
                         }}
                         className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1"
                       >
-                        무료 체크 시작 <ArrowRight className="w-3.5 h-3.5" />
+                        {isEn ? 'Start Free Check' : '무료 체크 시작'} <ArrowRight className="w-3.5 h-3.5" />
                       </button>
                     </div>
 
@@ -1309,8 +1476,10 @@ export default function App() {
                       >
                         <div className="text-slate-400 pt-1 font-mono text-xs group-hover:-translate-x-1 transition-transform">←</div>
                         <div className="space-y-1 overflow-hidden">
-                          <span className="text-[8px] sm:text-[9px] text-slate-400 font-semibold block">이전 아티클</span>
-                          <h5 className="font-bold text-[11px] sm:text-xs text-slate-850 truncate leading-snug group-hover:text-blue-600 transition-colors">{prev.title}</h5>
+                          <span className="text-[8px] sm:text-[9px] text-slate-400 font-semibold block">{isEn ? 'Previous Article' : '이전 아티클'}</span>
+                          <h5 className="font-bold text-[11px] sm:text-xs text-slate-850 truncate leading-snug group-hover:text-blue-600 transition-colors">
+                            {isEn ? prev.id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : prev.title}
+                          </h5>
                         </div>
                       </div>
                     ) : <div />}
@@ -1325,8 +1494,10 @@ export default function App() {
                         className="bg-white border border-slate-100 hover:border-blue-200 rounded-xl p-4 cursor-pointer transition-all duration-300 flex items-start justify-between gap-3 group text-right"
                       >
                         <div className="space-y-1 overflow-hidden w-full">
-                          <span className="text-[8px] sm:text-[9px] text-slate-400 font-semibold block">다음 아티클</span>
-                          <h5 className="font-bold text-[11px] sm:text-xs text-slate-850 truncate leading-snug group-hover:text-blue-600 transition-colors">{next.title}</h5>
+                          <span className="text-[8px] sm:text-[9px] text-slate-400 font-semibold block">{isEn ? 'Next Article' : '다음 아티클'}</span>
+                          <h5 className="font-bold text-[11px] sm:text-xs text-slate-850 truncate leading-snug group-hover:text-blue-600 transition-colors">
+                            {isEn ? next.id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : next.title}
+                          </h5>
                         </div>
                         <div className="text-slate-400 pt-1 font-mono text-xs group-hover:translate-x-1 transition-transform">→</div>
                       </div>
@@ -1336,7 +1507,7 @@ export default function App() {
                   {/* RELATED ARTICLES ROW COLUMN */}
                   <div className="space-y-4">
                     <h4 className="font-sans font-extrabold text-xs sm:text-sm text-slate-800 px-1">
-                      💡 이 칼럼과 상호 보완되는 연관 의학지식
+                      {isEn ? '💡 Complementary Insights & Related Medical Knowledge' : '💡 이 칼럼과 상호 보완되는 연관 의학지식'}
                     </h4>
                     <div className="grid grid-cols-2 md:grid-cols-5 gap-3">
                       {related.map((art) => (
@@ -1351,13 +1522,13 @@ export default function App() {
                         >
                           <div className="space-y-1">
                             <span className="text-[8px] font-bold text-blue-600 bg-blue-50 px-1 rounded block w-fit">
-                              {art.category}
+                              {getCategoryLabel(art.category)}
                             </span>
                             <h5 className="font-bold text-[10px] text-slate-800 line-clamp-3 leading-snug group-hover:text-blue-600 transition-colors">
-                              {art.title}
+                              {isEn ? art.id.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ') : art.title}
                             </h5>
                           </div>
-                          <span className="text-[9px] text-blue-600 text-right group-hover:translate-x-0.5 transition-transform">자세히 보기 →</span>
+                          <span className="text-[9px] text-blue-600 text-right group-hover:translate-x-0.5 transition-transform">{isEn ? 'View Detail' : '자세히 보기'} →</span>
                         </div>
                       ))}
                     </div>
@@ -1376,14 +1547,17 @@ export default function App() {
           <div className="space-y-6 max-w-3xl mx-auto animate-fade-in">
             <div className="text-center pb-4 border-b border-slate-100">
               <h2 className="font-sans font-extrabold text-2xl text-slate-900 tracking-tight">
-                자주 묻는 질문 ∙ FAQ
+                {isEn ? 'Frequently Asked Questions ∙ FAQ' : '자주 묻는 질문 ∙ FAQ'}
               </h2>
-              <p className="text-xs text-slate-400 mt-0.5">대중들이 가장 많이 혼동하는 수칙들에 대한 피부과 의과학 전문 답변을 수록했습니다.</p>
+              <p className="text-xs text-slate-450 mt-0.5">
+                {isEn ? 'Scientific and dermatological answers to highly confusing public misconceptions and daily rules.' : '대중들이 가장 많이 혼동하는 수칙들에 대한 피부과 의과학 전문 답변을 수록했습니다.'}
+              </p>
             </div>
 
             <div className="space-y-3 pt-2">
-              {FAQ_DATA.map((faq, idx) => {
+              {FAQ_DATA.map((faqRaw, idx) => {
                 const isOpen = openFaqIndex === idx;
+                const faq = getTranslatedFaq(faqRaw, idx);
                 return (
                   <div 
                     key={idx} 
@@ -1397,7 +1571,7 @@ export default function App() {
                     >
                       <div className="flex items-center gap-2.5">
                         <span className="inline-flex px-2 py-0.5 bg-slate-50 text-[10px] text-slate-400 border border-slate-100 rounded">
-                          {faq.category}
+                          {getCategoryLabel(faq.category)}
                         </span>
                         <span className="leading-snug">{faq.q}</span>
                       </div>
@@ -1427,17 +1601,21 @@ export default function App() {
         {currentTab === 'intro' && (
           <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto shadow-xs space-y-6 animate-fade-in">
             <h2 className="font-sans font-extrabold text-2xl text-slate-900 tracking-tight pb-4 border-b border-slate-100">
-              {SERVICE_INTRO.title}
+              {isEn ? getTranslatedIntro().title : SERVICE_INTRO.title}
             </h2>
             
             <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed whitespace-pre-line leading-loose">
-              {SERVICE_INTRO.content}
+              {isEn ? getTranslatedIntro().content : SERVICE_INTRO.content}
             </p>
 
             <div className="p-5 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
               <div>
-                <p className="text-xs font-bold text-slate-700">고객 정보 신뢰 서약서</p>
-                <p className="text-[10px] text-slate-400 mt-1">탈모체커는 어떠한 사용자 사진도 외부 데이터센터에 전송하지 않고 보장함을 의무적으로 약조합니다.</p>
+                <p className="text-xs font-bold text-slate-700">{isEn ? 'Customer Privacy Pledge' : '고객 정보 신뢰 서약서'}</p>
+                <p className="text-[10px] text-slate-400 mt-1">
+                  {isEn 
+                    ? 'Hair Loss Checker strictly guarantees that none of your uploaded scalp files are transmitted to any external data centers or clouds. All computations run 100% on-device in your secure local web sandbox.' 
+                    : '탈모체커는 어떠한 사용자 사진도 외부 데이터센터에 전송하지 않고 보장함을 의무적으로 약조합니다.'}
+                </p>
               </div>
               <button
                 _id="cta-checker-intro"
@@ -1445,7 +1623,7 @@ export default function App() {
                 onClick={() => setCurrentTab('checker')}
                 className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-2xs"
               >
-                자가 테스트 가동하기
+                {isEn ? 'Start Self-Test' : '자가 테스트 가동하기'}
               </button>
             </div>
           </div>
@@ -1458,10 +1636,10 @@ export default function App() {
           <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto shadow-xs space-y-6 animate-fade-in font-sans text-xs sm:text-sm">
             <h2 className="font-sans font-extrabold text-2xl text-slate-900 tracking-tight pb-4 border-b border-slate-100 flex items-center gap-2">
               <ShieldCheck className="w-6 h-6 text-blue-600 animate-pulse" />
-              개인정보처리방침 (Privacy Policy)
+              {isEn ? 'Privacy Policy' : '개인정보처리방침 (Privacy Policy)'}
             </h2>
             <div className="text-slate-600 whitespace-pre-line leading-relaxed space-y-4">
-              <p className="leading-loose font-sans">{PRIVACY_POLICY}</p>
+              <p className="leading-loose font-sans">{isEn ? getTranslatedPrivacy() : PRIVACY_POLICY}</p>
             </div>
           </div>
         )}
@@ -1473,10 +1651,10 @@ export default function App() {
           <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto shadow-xs space-y-6 animate-fade-in font-sans text-xs sm:text-sm">
             <h2 className="font-sans font-extrabold text-2xl text-slate-900 tracking-tight pb-4 border-b border-slate-100 flex items-center gap-2">
               <FileText className="w-6 h-6 text-blue-600" />
-              서비스 이용약관 (Terms Of Service)
+              {isEn ? 'Terms Of Service' : '서비스 이용약관 (Terms Of Service)'}
             </h2>
             <div className="text-slate-600 whitespace-pre-line leading-relaxed space-y-4">
-              <p className="leading-loose font-sans">{TERMS_AND_CONDITIONS}</p>
+              <p className="leading-loose font-sans">{isEn ? getTranslatedTerms() : TERMS_AND_CONDITIONS}</p>
             </div>
           </div>
         )}
@@ -1488,9 +1666,11 @@ export default function App() {
           <div className="max-w-xl mx-auto bg-white border border-slate-100 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6 animate-fade-in">
             <div className="pb-4 border-b border-slate-100 text-center">
               <h2 className="font-sans font-extrabold text-xl text-slate-900 tracking-tight">
-                문의하기 및 소통 창구
+                {isEn ? 'Contact Support' : '문의하기 및 소통 창구'}
               </h2>
-              <p className="text-[11px] text-slate-400 mt-0.5">탈모체커 서비스 이용에 관련된 제언, 애드센스 광고 제휴 등의 문의를 공유하십시오.</p>
+              <p className="text-[11px] text-slate-400 mt-0.5">
+                {isEn ? 'Please share any inquiries, suggestions, or brand partnership requests with our team.' : '탈모체커 서비스 이용에 관련된 제언, 애드센스 광고 제휴 등의 문의를 공유하십시오.'}
+              </p>
             </div>
 
             {contactSubmitted ? (
@@ -1498,9 +1678,11 @@ export default function App() {
                 <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-500 flex items-center justify-center">
                   <CheckCircle className="w-6 h-6" />
                 </div>
-                <h4 className="font-bold text-slate-800 text-base">소통 양식이 성공적으로 발행되었습니다</h4>
+                <h4 className="font-bold text-slate-800 text-base">{isEn ? 'Inquiry Submitted Successfully!' : '소통 양식이 성공적으로 발행되었습니다'}</h4>
                 <p className="text-xs text-slate-400 max-w-xs leading-normal">
-                  공유해 주신 소중한 의건 피드백은 연구소 서비스 운영진에 즉각 배포되었으며, 회신 적합 시 2-3일 내로 기재 정보를 통해 소통해 드리겠습니다.
+                  {isEn 
+                    ? 'Your valuable feedback has been instantly routed to our support team. If required, we will contact you back under the provided email details within 2-3 business days.' 
+                    : '공유해 주신 소중한 의건 피드백은 연구소 서비스 운영진에 즉각 배포되었으며, 회신 적합 시 2-3일 내로 기재 정보를 통해 소통해 드리겠습니다.'}
                 </p>
                 <button
                   type="button"
@@ -1510,7 +1692,7 @@ export default function App() {
                   }}
                   className="px-5 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold shadow-2xs"
                 >
-                  새로 문의하기
+                  {isEn ? 'New Inquiry' : '새로 문의하기'}
                 </button>
               </div>
             ) : (
@@ -1524,18 +1706,18 @@ export default function App() {
                 className="space-y-4 text-xs sm:text-sm font-sans"
               >
                 <div className="space-y-1.5 animate-slide-up">
-                  <label className="font-bold text-slate-700">이름 / 단체명</label>
+                  <label className="font-bold text-slate-700">{isEn ? 'Name / Organization' : '이름 / 단체명'}</label>
                   <input
                     type="text"
                     required
                     value={contactForm.name}
                     onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
-                    placeholder="홍길동"
+                    placeholder={isEn ? 'Your Name' : '홍길동'}
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-blue-400 focus:outline-hidden bg-slate-50/30"
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-bold text-slate-700">연락 전자우편 (E-mail)</label>
+                  <label className="font-bold text-slate-700">{isEn ? 'Contact E-mail' : '연락 전자우편 (E-mail)'}</label>
                   <input
                     type="email"
                     required
@@ -1546,13 +1728,13 @@ export default function App() {
                   />
                 </div>
                 <div className="space-y-1.5">
-                  <label className="font-bold text-slate-700">의견 및 문의 상세 내역</label>
+                  <label className="font-bold text-slate-700">{isEn ? 'Message & Inquiries details' : '의견 및 문의 상세 내역'}</label>
                   <textarea
                     rows={4}
                     required
                     value={contactForm.message}
                     onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
-                    placeholder="여기에 문의하고자 하는 세부 사항을 구체적으로 자유롭게 기재하십시오."
+                    placeholder={isEn ? 'Please specify your details and suggestions freely here...' : '여기에 문의하고자 하는 세부 사항을 구체적으로 자유롭게 기재하십시오.'}
                     className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:border-blue-400 focus:outline-hidden bg-slate-50/30 leading-relaxed font-sans"
                   />
                 </div>
@@ -1560,7 +1742,7 @@ export default function App() {
                   type="submit"
                   className="w-full py-3 bg-blue-600 text-white hover:bg-blue-700 rounded-xl font-extrabold transition-all text-xs tracking-tight shadow-xs"
                 >
-                  운영진에 건의서 발송
+                  {isEn ? 'Send Message to Board' : '운영진에 건의서 발송'}
                 </button>
               </form>
             )}
@@ -1569,7 +1751,7 @@ export default function App() {
             <div className="p-4 bg-slate-50 rounded-2xl flex items-center gap-3 border border-slate-100">
               <Mail className="w-4 h-4 text-blue-500" />
               <div className="text-[10px] text-slate-400 leading-normal">
-                메일 직접 연락망: <b className="text-slate-600">contact@hairlosschecker.example.com</b>
+                {isEn ? 'Direct Support Email:' : '메일 직접 연락망:'} <b className="text-slate-600">contact@hairlosschecker.example.com</b>
               </div>
             </div>
 
