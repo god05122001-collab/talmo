@@ -20,7 +20,9 @@ import {
   Heart,
   Calendar,
   Eye,
-  FileText
+  FileText,
+  Share2,
+  Check
 } from 'lucide-react';
 import { ContentTabId, AnalysisResult, ForumFAQ } from './types';
 import { ARTICLES, FAQ_DATA, SERVICE_INTRO, TERMS_AND_CONDITIONS, PRIVACY_POLICY } from './constants';
@@ -196,6 +198,47 @@ Article 3 (Data Ownership & Immediate Erasure)
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('전체');
   const [openArticleFaqIndex, setOpenArticleFaqIndex] = useState<number | null>(null);
+
+  // 공유하기 복사 여부 상태 및 공통 공유 유틸리티 가동성 확보
+  const [copiedShare, setCopiedShare] = useState(false);
+
+  const handleShareResult = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = isEn ? 'Hair Loss Checker - On-Device Self Diagnostic' : '탈모체커 - 온디바이스 무료 자가진단';
+    const shareText = isEn 
+      ? '100% on-device private hair status and density contrast checker.' 
+      : '사진 2장, 30초 만에 분석 가능한 개인정보 오프라인 안심 자가 탈모 진단 서비스!';
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl
+        });
+        return;
+      } catch (err) {
+        // Fallback
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopiedShare(true);
+      setTimeout(() => setCopiedShare(false), 2000);
+    } catch (err) {
+      const textArea = document.createElement("textarea");
+      textArea.value = shareUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setCopiedShare(true);
+        setTimeout(() => setCopiedShare(false), 2000);
+      } catch (e) {}
+      document.body.removeChild(textArea);
+    }
+  };
 
   // 1. URL의 Hash를 추적하여 SPA 라우팅 싱크 매칭 (SEO & 공유성 증대)
   useEffect(() => {
@@ -820,6 +863,25 @@ Article 3 (Data Ownership & Immediate Erasure)
                       >
                         <Download className="w-3.5 h-3.5" />
                         {isEn ? 'Print or Save PDF' : '결과지 인쇄 및 PDF 저장'}
+                      </button>
+
+                      {/* Direct Result Page Sharing Activator */}
+                      <button
+                        type="button"
+                        onClick={handleShareResult}
+                        className="px-4 py-2 text-xs bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg shadow-2xs font-extrabold tracking-tight transition-all flex items-center gap-1.5 cursor-pointer"
+                      >
+                        {copiedShare ? (
+                          <>
+                            <Check className="w-3.5 h-3.5 animate-bounce" />
+                            {isEn ? 'Link Copied!' : '복사되었습니다!'}
+                          </>
+                        ) : (
+                          <>
+                            <Share2 className="w-3.5 h-3.5" />
+                            {isEn ? 'Share with Friends' : '친구에게 주소 공유하기'}
+                          </>
+                        )}
                       </button>
                     </div>
                   </div>

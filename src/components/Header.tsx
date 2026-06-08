@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Menu, X, Activity, BookOpen, HelpCircle, FileText, Globe } from 'lucide-react';
+import { Menu, X, Activity, BookOpen, HelpCircle, FileText, Globe, Share2, Check } from 'lucide-react';
 import { ContentTabId } from '../types';
 import { useTranslation } from 'react-i18next';
 import { syncLanguageUrl } from '../i18n';
@@ -16,7 +16,44 @@ interface HeaderProps {
 
 export default function Header({ currentTab, onTabChange }: HeaderProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const { t, i18n } = useTranslation();
+
+  const handleShare = async () => {
+    const shareUrl = window.location.href;
+    const shareTitle = i18n.language.startsWith('ko') ? '탈모체커 - 2장 사진으로 30초만에 끝내는 자가 점검' : 'Hair Loss Checker - 30s On-Device Scalp Scan';
+    const shareText = i18n.language.startsWith('ko') ? '개인정보 서버 유출 없는 100% 온디바이스 모발 자가 체크 서비스!' : 'A free, local, sandboxed privacy-safe hair assessment utility.';
+
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: shareTitle,
+          text: shareText,
+          url: shareUrl
+        });
+        return;
+      } catch (err) {
+        // Fallback
+      }
+    }
+
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch (err) {
+      const textArea = document.createElement("textarea");
+      textArea.value = shareUrl;
+      document.body.appendChild(textArea);
+      textArea.select();
+      try {
+        document.execCommand('copy');
+        setCopied(true);
+        setTimeout(() => setCopied(false), 2000);
+      } catch (e) {}
+      document.body.removeChild(textArea);
+    }
+  };
 
   const navItems: { id: ContentTabId; label: string; icon: React.ReactNode }[] = [
     { id: 'checker', label: t('header.nav_checker'), icon: <Activity className="w-4 h-4" /> },
@@ -113,12 +150,23 @@ export default function Header({ currentTab, onTabChange }: HeaderProps) {
             </div>
           </div>
 
+          {/* Share Button (Desktop) - High Visibility Emerald Glow */}
           <button
-            id="desktop-header-cta"
-            onClick={() => handleNavClick('checker')}
-            className="px-4 py-2 bg-blue-600 text-white rounded-lg text-xs font-bold hover:bg-blue-700 hover:scale-[1.02] shadow-xs hover:shadow-md transition-all duration-300 cursor-pointer"
+            id="desktop-share-btn"
+            onClick={handleShare}
+            className="flex items-center gap-1.5 px-3.5 py-2 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200/60 text-emerald-700 rounded-lg text-xs font-bold transition-all shrink-0 cursor-pointer shadow-xs hover:scale-[1.02]"
           >
-            {t('header.cta_button')}
+            {copied ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-600 animate-bounce" />
+                <span className="text-emerald-700 font-extrabold">{i18n.language.startsWith('ko') ? '복사 완료!' : 'Copied!'}</span>
+              </>
+            ) : (
+              <>
+                <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+                <span>{i18n.language.startsWith('ko') ? '공유하기' : 'Share'}</span>
+              </>
+            )}
           </button>
         </div>
 
@@ -152,6 +200,21 @@ export default function Header({ currentTab, onTabChange }: HeaderProps) {
               </button>
             </div>
           </div>
+
+          {/* Quick Mobile Share Icon button */}
+          <button
+            id="mobile-share-btn"
+            onClick={handleShare}
+            className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/40 rounded-xl transition-all cursor-pointer flex items-center justify-center shrink-0 animate-pulse"
+            aria-label="공유하기"
+          >
+            {copied ? (
+              <Check className="w-4 h-4 text-emerald-600 animate-bounce" />
+            ) : (
+              <Share2 className="w-4 h-4 text-emerald-600" />
+            )}
+          </button>
+
           <button
             id="mobile-menu-trigger"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -195,13 +258,24 @@ export default function Header({ currentTab, onTabChange }: HeaderProps) {
               <button id="mobile-nav-privacy" onClick={() => handleNavClick('privacy')} className="text-left py-2 hover:text-blue-600 transition-colors">∙ {t('header.nav_privacy')}</button>
             </div>
 
-            <div className="pt-4">
+            <div className="pt-4 space-y-2">
+              {/* Full-width mobile drawer share callout button */}
               <button
-                id="mobile-header-cta"
-                onClick={() => handleNavClick('checker')}
-                className="w-full py-3 bg-blue-600 text-white rounded-xl text-sm font-bold shadow-xs hover:bg-blue-700 text-center block cursor-pointer"
+                id="mobile-menu-share-btn"
+                onClick={handleShare}
+                className="w-full py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200/60 rounded-xl text-sm font-bold shadow-xs flex items-center justify-center gap-2 cursor-pointer transition-all"
               >
-                {t('header.cta_button_mobile')}
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 text-emerald-600" />
+                    <span>{i18n.language.startsWith('ko') ? '복사 완료!' : 'Link Copied!'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4 text-emerald-600" />
+                    <span>{i18n.language.startsWith('ko') ? '자가진단 서비스 친구에게 공유하기' : 'Share Self-Test with Friends'}</span>
+                  </>
+                )}
               </button>
             </div>
           </div>
