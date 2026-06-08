@@ -1599,32 +1599,189 @@ Article 3 (Data Ownership & Immediate Erasure)
         {/* 5. BRAND INTRO (서비스 소개) */}
         {/* ========================================================= */}
         {currentTab === 'intro' && (
-          <div className="bg-white border border-slate-100 rounded-3xl p-6 sm:p-10 max-w-3xl mx-auto shadow-xs space-y-6 animate-fade-in">
-            <h2 className="font-sans font-extrabold text-2xl text-slate-900 tracking-tight pb-4 border-b border-slate-100">
-              {isEn ? getTranslatedIntro().title : SERVICE_INTRO.title}
-            </h2>
-            
-            <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed whitespace-pre-line leading-loose">
-              {isEn ? getTranslatedIntro().content : SERVICE_INTRO.content}
-            </p>
-
-            <div className="p-5 bg-slate-50 border border-slate-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div>
-                <p className="text-xs font-bold text-slate-700">{isEn ? 'Customer Privacy Pledge' : '고객 정보 신뢰 서약서'}</p>
-                <p className="text-[10px] text-slate-400 mt-1">
-                  {isEn 
-                    ? 'Hair Loss Checker strictly guarantees that none of your uploaded scalp files are transmitted to any external data centers or clouds. All computations run 100% on-device in your secure local web sandbox.' 
-                    : '탈모체커는 어떠한 사용자 사진도 외부 데이터센터에 전송하지 않고 보장함을 의무적으로 약조합니다.'}
-                </p>
+          <div className="space-y-8 animate-fade-in max-w-3xl mx-auto">
+            {/* SEO Brand Header Panel */}
+            <div className="bg-white border border-slate-200/50 rounded-3xl p-6 sm:p-10 shadow-xs space-y-4">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-tight">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>100% On-Device Local Privacy Scan</span>
               </div>
-              <button
-                _id="cta-checker-intro"
-                type="button"
-                onClick={() => setCurrentTab('checker')}
-                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-2xs"
-              >
-                {isEn ? 'Start Self-Test' : '자가 테스트 가동하기'}
-              </button>
+              
+              <h1 className="font-sans font-extrabold text-2xl sm:text-3xl lg:text-4xl text-slate-900 tracking-tight leading-snug">
+                {isEn 
+                  ? 'Our Mission: Democratizing Hair Health and On-Device Design Philosophy' 
+                  : '탈모체커: 사진 2장으로 30초 만에 끝내는 프라이버시 형 자가 점검 서비스'}
+              </h1>
+              
+              <p className="text-xs sm:text-sm text-slate-400 font-mono">
+                Official Web Address: <span className="text-blue-600 font-bold">ai-hair.pe.kr</span>
+              </p>
+              
+              <div className="h-px bg-slate-100 my-4" />
+
+              {/* SECTION 1: Introduction */}
+              <section className="space-y-3">
+                <h2 className="font-sans font-bold text-lg sm:text-xl text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-blue-600 rounded-full inline-block"></span>
+                  {isEn ? 'Why Hair Loss Checker?' : '1. 왜 탈모체커(ai-hair.pe.kr)인가요?'}
+                </h2>
+                <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-700/95 leading-relaxed">
+                  {isEn 
+                    ? 'Empowering you with early indicators before unnecessary financial spending.' 
+                    : '불안감을 극대화해 지갑을 열게 만드는 가짜 마케팅에 지친 현대인을 지켜냅니다.'}
+                </h3>
+                <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed whitespace-pre-line leading-loose">
+                  {isEn 
+                    ? `Hair Loss Checker is a browser-sandboxed, intelligence-driven self-assessment utility designed to bridge the gap between people suffering from hair thinning anxieties and scientific, proven clinical knowledge in 30 seconds.
+                    
+Far too often, those experiencing hair thinning fall prey to viral unproven remedies, expensive cosmetic shampoos, or marketing scams, losing valuable golden times and thousands of dollars before consulting actual medical experts.`
+                    : `살면서 탈모 걱정이 고개를 들기 시작할 때, 많은 이들이 막연한 공포심에 휩싸여 효과가 불명확한 고가의 기능성 샴푸나 영양제에 엄청난 자산을 낭비하곤 합니다. 정작 가장 필요한 전문의와의 메디컬 카운셀링 시점은 늦어지기만 하죠.
+                    
+이에 '탈모체커'는 사용자의 불안에 편승하지 않고, 단 30초 만에 현재의 두피 상태와 이마 헤어라인 밀도를 객관적으로 판독해 드립니다. 전문 의료기관 방문 전, 내가 지금 어떤 상황인지 직관적인 자가 수치 데이터로 스마트하게 준비할 수 있도록 돕겠습니다.`}
+                </p>
+              </section>
+
+              {/* SECTION 2: How it works */}
+              <section className="space-y-3 pt-4">
+                <h2 className="font-sans font-bold text-lg sm:text-xl text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-blue-600 rounded-full inline-block"></span>
+                  {isEn ? 'How It Works' : '2. 초간편 작동 원리 및 첨단 모니터링'}
+                </h2>
+                <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-700/95">
+                  {isEn 
+                    ? 'Advanced local contrast comparison technology.' 
+                    : '100% 브라우저 로컬 캔버스 픽셀 스캐닝 메커니즘'}
+                </h3>
+                <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed whitespace-pre-line leading-loose">
+                  {isEn 
+                    ? 'We developed a local pixel contrast monitoring solution for crown regions and hairline boundaries, ensuring complete visual clarity for early detection.' 
+                    : '탈모체커는 업로드된 정수리 및 이마 사진 2장에서 모발이 차지하는 명암 구직 영역과 피부 톤 비율을 미세하게 측정합니다. 픽셀 대비 분석 모델을 탑재한 로컬 스캐너가 HTML5 Canvas 상에서 온디바이스(On-Device) 연산으로 구동되어, 사진의 디테일을 정교하게 환산해 수치화합니다.'}
+                </p>
+              </section>
+
+              {/* SECTION 3: Privacy */}
+              <section className="space-y-3 pt-4">
+                <h2 className="font-sans font-bold text-lg sm:text-xl text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-blue-600 rounded-full inline-block"></span>
+                  {isEn ? 'Complete Privacy Protection' : '3. 절대 전송 없음: 안전한 개인정보 보호 방식'}
+                </h2>
+                <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-700/95">
+                  {isEn 
+                    ? 'Your face and scalp files remain absolutely yours.' 
+                    : '개인 정보를 단 1바이트도 서버에 유출하지 않는 철벽 프라이버시'}
+                </h3>
+                <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed whitespace-pre-line leading-loose font-sans">
+                  {isEn 
+                    ? 'Your uploaded photos remain completely inside local sandboxed browser memory and are deleted immediately upon completion.' 
+                    : '체킹을 위해 올린 2장의 사진은 사용자의 웹 브라우저 가상 RAM 메모리에 일시적으로만 머무르며 연산에 기여합니다. 당사 혹은 외부 클라우드 서버에 절대 보존되지도, 전달되지도 않는 100% 클라이언트 온바운드 샌드박스 원칙을 취합니다. 완료 시 혹은 페이지 브라우저 탭을 닫는 즉시 자동으로 영구 소멸되어 신원 노출 걱정이 없습니다. (구글 애드센스 광고는 서비스 운영 자금 확보용으로만 연계되며 사용자의 검진 이미지 정보와 절대 교차 매핑되지 않습니다.)'}
+                </p>
+              </section>
+
+              {/* SECTION 4: Who should use it */}
+              <section className="space-y-3 pt-4">
+                <h2 className="font-sans font-bold text-lg sm:text-xl text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-blue-600 rounded-full inline-block"></span>
+                  {isEn ? 'Who is it for?' : '4. 탈모체커, 이런 분들께 특히 추천합니다!'}
+                </h2>
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 pt-1">
+                  <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                    <span className="text-blue-600 font-extrabold text-xs block mb-1">Recommend 01</span>
+                    <h4 className="font-bold text-slate-850 text-xs sm:text-sm mb-1">{isEn ? 'Early Anxiety Relief' : '초기 불안 구제'}</h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{isEn ? 'Are you losing hair during shower? Self-check in 30 seconds.' : '요즘 부쩍 머리카락이 가늘어지거나 샤워 후 이탈이 잦아 고민스럽지만 클리닉에 방문하기는 머뭇거려지는 분'}</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                    <span className="text-blue-600 font-extrabold text-xs block mb-1">Recommend 02</span>
+                    <h4 className="font-bold text-slate-850 text-xs sm:text-sm mb-1">{isEn ? 'Hairline Diagnostics' : '이마 & 정수리 추세 관측'}</h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{isEn ? 'Regular trends monitoring for crown vertex parting expansions.' : 'M자형 헤어라인 후퇴 속도나 가르마 고랑의 확장 현상을 편하게 지속적으로 트래킹해보고 싶은 분'}</p>
+                  </div>
+                  <div className="p-4 rounded-xl border border-slate-100 bg-slate-50/50">
+                    <span className="text-blue-600 font-extrabold text-xs block mb-1">Recommend 03</span>
+                    <h4 className="font-bold text-slate-850 text-xs sm:text-sm mb-1">{isEn ? 'Therapy Progress Tracking' : '자가 예방 피드백 수집'}</h4>
+                    <p className="text-[11px] text-slate-500 leading-relaxed">{isEn ? 'Verify if anti-loss hair habits and FDA-approved routines are effective.' : '복용하는 탈모 관리 제품 및 치료 수칙의 효과 전후 추이를 집에서 비침습적 수치로 모니터링 관리하려는 분'}</p>
+                  </div>
+                </div>
+              </section>
+
+              {/* SECTION 5: Limitations */}
+              <section className="space-y-3 pt-4">
+                <h2 className="font-sans font-bold text-lg sm:text-xl text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-amber-500 rounded-full inline-block"></span>
+                  {isEn ? 'Medical Disclaimer' : '5. AI 분석 한계 및 법률 고지'}
+                </h2>
+                <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-700/95 flex items-center gap-1.5 text-amber-600">
+                  <AlertTriangle className="w-4 h-4 text-amber-500" />
+                  {isEn 
+                    ? 'This is a personal check utility, not formal clinical diagnosis.' 
+                    : '탈모체커는 의료 행위(진료, 진단, 처방) 권한을 대변하지 않습니다.'}
+                </h3>
+                <p className="text-slate-600 font-sans text-xs sm:text-sm leading-relaxed whitespace-pre-line leading-loose">
+                  {isEn 
+                    ? 'The visual and contrast reference values generated are for private routine assessment purposes only. They do not constitute formal clinical diagnoses or medical advice from qualified dermatologists.' 
+                    : '탈모체커의 온디바이스 픽셀 명암 진척 점수는 학술 연구 기준을 바탕으로 산출되는 "참고 및 루틴 추세 관리용 수치"입니다. 이는 공인된 안면 피부과 정밀 모발 현미경이나 모낭 생검 등을 거친 진단서를 대변할 수 없습니다. 모발 건강 악화 및 염증이 두드러질 경우, 자의적인 치료 개시를 금하며 반드시 자격이 부여된 전문 의료기관 오프라인 전문의 진찰과 치료 플랜을 가동하시기를 가이드합니다.'}
+                </p>
+              </section>
+
+              {/* SECTION 6: FAQ */}
+              <section className="space-y-4 pt-4 border-t border-slate-100">
+                <h2 className="font-sans font-bold text-lg sm:text-xl text-slate-800 flex items-center gap-2">
+                  <span className="w-1.5 h-6 bg-blue-600 rounded-full inline-block"></span>
+                  {isEn ? 'Introductory FAQ' : '6. 자주 묻는 질문 베스트 3'}
+                </h2>
+                <div className="space-y-3">
+                  <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <h4 className="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+                      <span className="text-blue-600 font-bold">Q.</span>
+                      {isEn ? 'Will my photo ever leak or be shared?' : '정말 제 사진이 해킹되어 유출될 위험은 영원히 없나요?'}
+                    </h4>
+                    <p className="text-slate-600 text-[11px] sm:text-xs mt-2 leading-relaxed">
+                      {isEn 
+                        ? 'Absolutely. All image processing loops completely inside your device RAM.' 
+                        : '예, 절대 안심하십시오. 탈모체커는 "서버 수렴 데이터 저장 장치" 자체가 구비되어 있지 않습니다. 이미지는 사용자의 브라우저 로컬 RAM 가상 환경 내에서 계산 처리 즉시 100% 깔끔하게 소환 해제 및 소멸되는 구조로 설계되어 있습니다. 물리적으로 해커가 도중에 빼돌리거나 유출할 인프라 자체가 존재하지 않습니다.'}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <h4 className="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+                      <span className="text-blue-600 font-bold">Q.</span>
+                      {isEn ? 'Should I ingest loss pills if my score indicates severe thinning?' : '자가 체크 점수가 안 좋게 나왔다면 바로 병원 탈모 치료제를 먹어야 하나요?'}
+                    </h4>
+                    <p className="text-slate-600 text-[11px] sm:text-xs mt-2 leading-relaxed">
+                      {isEn 
+                        ? 'We advise consulting with licensed dermatologists first.' 
+                        : '아닙니다. 탈모체커의 점수는 수치를 보정하고 주의 경각심을 고무시켜 전문 예방 칼럼을 학습하기 위함입니다. 피나스테리드, 두타스테리드, 혹은 여성용 미녹시딜 제품 등을 처방 혹은 활용하기 이전에는 꼭 숙련된 피부과학 분과 전문의의 원스톱 처방과 조율을 따르셔야 가역 부작용을 사전에 안전히 차단할 수 있습니다.'}
+                    </p>
+                  </div>
+                  <div className="p-4 bg-slate-50/50 rounded-xl border border-slate-100">
+                    <h4 className="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
+                      <span className="text-blue-600 font-bold">Q.</span>
+                      {isEn ? 'How to capture photos for maximum precision?' : '어떤 환경에서 촬영 사진을 준비해야 가장 정밀한가요?'}
+                    </h4>
+                    <p className="text-slate-600 text-[11px] sm:text-xs mt-2 leading-relaxed">
+                      {isEn 
+                        ? 'Ensure bright, unified lighting with clear focus.' 
+                        : '빛이 너무 부족해 무거운 어둠이 깔리거나, 머리카락 빛이 지나칠 정도로 강하게 번쩍이는 역광 영역은 정수리 명암 비율 연산 가산점에 오차를 발생시킵니다. 가급적 그늘지지 않는 고른 형광등 조명 아래에서, 핀트 초점을 튼튼히 맞춰 헤어라인 고랑과 가르마가 균형 잡히도록 선명함을 담아 촬영을 등록해 주시면 분석의 신뢰도가 배가됩니다.'}
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              {/* SECTION 7: CTA ACTION CARD */}
+              <div className="pt-6 sm:pt-8">
+                <div className="p-6 bg-radial from-blue-500/10 to-transparent border border-blue-100 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div>
+                    <h4 className="font-bold text-slate-850 text-xs sm:text-sm">{isEn ? 'Would you like to measure your hair loss check now?' : '나의 모발 상태를 지금 30초 만에 점검해보시겠습니까?'}</h4>
+                    <p className="text-[10px] text-slate-400 mt-1">{isEn ? '100% local, sandboxed privacy-safe scanning.' : '회원가입 필요 없음, 서버 전송 없음. 100% 브라우저 자체 분석으로 마음 편하게 시작하세요.'}</p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setCurrentTab('checker')}
+                    className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 whitespace-nowrap"
+                  >
+                    {isEn ? 'Start Private Scan (Free)' : '30초 머리카락 자가 점검 시작하기 (무료)'} 
+                    <ArrowRight className="w-4 h-4" />
+                  </button>
+                </div>
+              </div>
+
             </div>
           </div>
         )}
@@ -1751,7 +1908,7 @@ Article 3 (Data Ownership & Immediate Erasure)
             <div className="p-4 bg-slate-50 rounded-2xl flex items-center gap-3 border border-slate-100">
               <Mail className="w-4 h-4 text-blue-500" />
               <div className="text-[10px] text-slate-400 leading-normal">
-                {isEn ? 'Direct Support Email:' : '메일 직접 연락망:'} <b className="text-slate-600">contact@hairlosschecker.example.com</b>
+                {isEn ? 'Inquiry Email:' : '문의 이메일:'} <b className="text-slate-600">god05122001@gmail.com</b>
               </div>
             </div>
 
