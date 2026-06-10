@@ -113,6 +113,16 @@ export default function Footer({ onTabChange }: FooterProps) {
             <h4 id="footer-menu-links" className="font-semibold text-xs text-slate-200 tracking-wider uppercase mb-4">{t('footer.menu_title')}</h4>
             <ul className="space-y-2.5 text-xs">
               <li>
+                <button onClick={() => handleNavClick('scalp-age')} className="hover:text-blue-300 transition-colors text-left text-blue-400 font-extrabold cursor-pointer">
+                  ✨ {t('header.nav_scalp_age', '두피 나이 테스트')}
+                </button>
+              </li>
+              <li>
+                <button onClick={() => handleNavClick('hair-habit')} className="hover:text-pink-300 transition-colors text-left text-pink-400 font-extrabold cursor-pointer">
+                  🔮 {t('header.nav_hair_habit', '머리 습관 점수 테스트')}
+                </button>
+              </li>
+              <li>
                 <button onClick={() => handleNavClick('intro')} className="hover:text-white transition-colors text-left text-slate-400 cursor-pointer">
                   {t('header.nav_intro')}
                 </button>

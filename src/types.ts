@@ -43,7 +43,9 @@ export type ContentTabId =
   | 'terms'
   | 'contact'
   | 'wiki'
-  | 'article-detail';
+  | 'article-detail'
+  | 'scalp-age'
+  | 'hair-habit';
 
 export interface ForumFAQ {
   q: string;

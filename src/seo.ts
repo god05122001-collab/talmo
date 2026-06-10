@@ -68,6 +68,16 @@ export const SEO_METADATA: Record<ContentTabId, { title: string; description: st
     description: '탈모체커 서비스 이용에 관해 피드백이나 기타 보도, 광고 설치 문의가 있으신 경우 담당자 전자 메일 소통 창구입니다.',
     keywords: '문의하기, 제휴문의, 피드백전달, 고객센터'
   },
+  'scalp-age': {
+    title: '두피 나이 테스트 | 자가 두피 진단 | 탈모체커',
+    description: '10가지 정밀 행동 및 유전형 문항 설문을 통해 나의 예상 두피 생물학적 나이와 상태 등급을 진단하고, 습관별 추천 관리 가이드를 즉시 도출해 보세요.',
+    keywords: '두피나이, 두피수준, 두피건강, 탈모유전, 두피상태, 두피테스트'
+  },
+  'hair-habit': {
+    title: '머리 관리 습관 점수 테스트 | 자가 점검 | 탈모체커',
+    description: '매일 반복되는 샴푸, 풍건 온도, 야식, 수면, 단백질 식습관 등 10가지 세부 관측 지표를 분석하여 0~100점의 머리 관리 역량 점수 성적표를 확인해 보세요.',
+    keywords: '머리습관, 탈모습관, 모발보존점수, 두피열관리, 샴푸습관, 자가측정지수'
+  },
   wiki: {
     title: '탈모백과 전체 인덱스 - 총 70편의 고품격 의학 라이브러리 | 탈모체커',
     description: '총 70편의 고품격 탈모 의학 및 생활 상식 칼럼 라이브러리입니다. 모발 성장 주기, 완벽 영양소 공급법, 연령별 증상을 검색하십시오.',
@@ -140,6 +150,16 @@ export const SEO_METADATA_EN: Record<ContentTabId, { title: string; description:
     title: 'Contact Us & Global Partnerships | Hair Loss Checker',
     description: 'Reach out to our engineering, alliance development, and health coordination desk for suggestions or corporate partnerships.',
     keywords: 'contact us, team partnerships, feedback submission, smart health offices'
+  },
+  'scalp-age': {
+    title: 'Scalp Age Test | Biological Scalp Diagnosis | Hair Loss Checker',
+    description: 'Answer 10 short clinical-based questions to forecast your biological scalp health age and get personalized, evidence-backed hair preservation advice.',
+    keywords: 'scalp age, scalp testing, hair biological age, hair loss heredity, scalp health check'
+  },
+  'hair-habit': {
+    title: 'Hair Care Habits Score Test | Custom Audit | Hair Loss Checker',
+    description: 'Audit your daily hair washing, blow-dry heat, late night snacks, sleep patterns, and protein intake to find your wellness habit score out of 100.',
+    keywords: 'hair care habits, follicle habits, hair care audit, scalp thermal level, hair health score'
   },
   wiki: {
     title: 'Encyclopedia Index - 70 Volumes of Medical Analysis | Hair Loss Checker',
@@ -285,7 +305,7 @@ export function updateHreflangTags() {
 export function generateSitemapXMLString(): string {
   const baseUrl = window.location.origin;
   const tabs: ContentTabId[] = [
-    'home', 'checker', 'symptoms', 'prevention', 'causes', 'male', 'female', 'faq', 'intro', 'privacy', 'terms', 'contact', 'wiki'
+    'home', 'checker', 'scalp-age', 'hair-habit', 'symptoms', 'prevention', 'causes', 'male', 'female', 'faq', 'intro', 'privacy', 'terms', 'contact', 'wiki'
   ];
   
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

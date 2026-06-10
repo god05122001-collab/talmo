@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { Menu, X, Activity, BookOpen, HelpCircle, FileText, Globe, Share2, Check } from 'lucide-react';
+import { Menu, X, Activity, BookOpen, HelpCircle, FileText, Globe, Share2, Check, Sparkles } from 'lucide-react';
 import { ContentTabId } from '../types';
 import { useTranslation } from 'react-i18next';
 import { syncLanguageUrl } from '../i18n';
@@ -56,7 +56,6 @@ export default function Header({ currentTab, onTabChange }: HeaderProps) {
   };
 
   const navItems: { id: ContentTabId; label: string; icon: React.ReactNode }[] = [
-    { id: 'checker', label: t('header.nav_checker'), icon: <Activity className="w-4 h-4" /> },
     { id: 'wiki', label: t('header.nav_wiki'), icon: <BookOpen className="w-4 h-4 text-emerald-500" /> },
     { id: 'symptoms', label: t('header.nav_symptoms'), icon: <FileText className="w-4 h-4" /> },
     { id: 'faq', label: t('header.nav_faq'), icon: <HelpCircle className="w-4 h-4" /> }

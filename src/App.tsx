@@ -40,6 +40,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import ImagePicker from './components/ImagePicker';
 import AdBox from './components/AdBox';
+import ScalpAgePage from './pages/ScalpAgePage';
+import HairHabitPage from './pages/HairHabitPage';
 import { useTranslation } from 'react-i18next';
 
 export default function App() {
@@ -255,7 +257,7 @@ Article 3 (Data Ownership & Immediate Erasure)
 
         // 유효한 탭값인지 검증 후 탭 설정
         const validTabs: ContentTabId[] = [
-          'home', 'checker', 'symptoms', 'prevention', 'causes', 'male', 'female', 'faq', 'intro', 'privacy', 'terms', 'contact', 'wiki', 'article-detail'
+          'home', 'checker', 'symptoms', 'prevention', 'causes', 'male', 'female', 'faq', 'intro', 'privacy', 'terms', 'contact', 'wiki', 'article-detail', 'scalp-age', 'hair-habit'
         ];
         if (validTabs.includes(hash as ContentTabId)) {
           // 레거시 탭 경로 유입 시, E-E-A-T가 보장된 7k자 칼럼과 자연스럽게 매칭 우적 유인
@@ -391,126 +393,197 @@ Article 3 (Data Ownership & Immediate Erasure)
       <main className="flex-grow max-w-5xl w-full mx-auto px-4 sm:px-6 py-8 md:py-12">
         
         {/* ========================================================= */}
-        {/* 1. HOME TAB (브랜드 메인 랜딩) */}
+        {/* 1. HOME TAB (브랜드 메인 랜딩 - 3대 도구 매칭) */}
         {/* ========================================================= */}
         {currentTab === 'home' && (
           <div className="space-y-12 md:space-y-16 animate-fade-in">
-            {/* HERO HERO BRIGHT SLATE */}
-            <div className="relative text-center py-12 md:py-20 px-6 bg-radial from-blue-50/50 via-white to-white rounded-3xl border border-slate-100/60 overflow-hidden shadow-xs">
-              
-              {/* 장식 플랫 배지 */}
-              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-tight mb-4 animate-pulse">
-                <Sparkles className="w-3.5 h-3.5" />
-                <span>{isEn ? '100% On-Device Local Privacy Scan' : '100% 프라이버시 온디바이스 로컬 연산'}</span>
+            {/* HERO TYPOGRAPHY TOP */}
+            <div className="text-center max-w-3xl mx-auto space-y-4">
+              <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-blue-50 text-blue-600 rounded-full text-xs font-bold tracking-tight mb-2">
+                <Sparkles className="w-3.5 h-3.5 text-blue-500 animate-pulse" />
+                <span>{isEn ? '100% Serverless On-Device Privacy Scanning' : '100% 온디바이스 보안 설계 ∙ 서버 저장 없음'}</span>
               </div>
-
-              <h2 className="font-sans font-extrabold text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight leading-tight max-w-3xl mx-auto">
+              
+              <h2 className="font-sans font-extrabold text-3xl sm:text-4xl md:text-5xl text-slate-950 tracking-tight leading-tight">
                 {isEn ? (
                   <>
-                    Crown and Hairline Recessions<br />
-                    Instant Self-Check via <span className="text-blue-600">2 Photos</span>
+                    Find Your Perfect Hair Symmetry <br />
+                    With Modern <span className="text-blue-600">AI Self-Analysis</span>
                   </>
                 ) : (
                   <>
-                    정수리와 헤어라인,<br className="sm:hidden" />
-                    <span className="text-blue-600">사진 2장</span>으로 확인하는 즉석 탈모 자가 체크
+                    나를 위한 맞춤형 헤어 솔루션, <br className="hidden sm:inline" />
+                    <span className="text-blue-600">온디바이스 AI</span>로 정밀하게 진단하세요
                   </>
                 )}
               </h2>
 
-              <p className="mt-5 text-sm sm:text-base text-slate-500/90 leading-relaxed max-w-2xl mx-auto font-sans">
+              <p className="text-slate-500 text-sm sm:text-base leading-relaxed max-w-2xl mx-auto">
                 {isEn ? (
-                  <>
-                    Simply select your crown photo and headline boundaries.<br className="hidden sm:inline" /> Our analyzer computes on-device contrast and density results instantly without exposing any files.
-                  </>
+                  "Identify early signs of scalp thinning, simulate forehead adjustments, or dye virtually with premium salon shades in real-time securely on your browser."
                 ) : (
-                  <>
-                    정수리 촬영 사진과 앞머리 이마라인 사진 2장만 올려주시면,<br className="hidden sm:inline" /> 현재 모발 두피의 이상 유무를 빠르고 투명하게 분석하여 자가 참고 수치를 도출해 냅니다.
-                  </>
+                  "정밀한 모발 밀도 대비 측정부터 섬세한 이마 비율 조절, 그리고 나만의 찰떡 가상 퍼스널 염색까지 브라우저 내에서 즉각 확인 및 시뮬레이션할 수 있습니다."
                 )}
-              </p>
-
-              <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3.5">
-                <button
-                  type="button"
-                  onClick={() => setCurrentTab('checker')}
-                  className="w-full sm:w-auto px-8 py-4 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-sm font-extrabold tracking-tight shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2"
-                >
-                  {isEn ? 'Start Free Check' : '무료 자가 체크 시작하기'}
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    const el = document.getElementById('knowledge-center');
-                    el?.scrollIntoView({ behavior: 'smooth' });
-                  }}
-                  className="w-full sm:w-auto px-6 py-4 bg-white border border-slate-200 hover:bg-slate-50/50 text-slate-600 rounded-xl text-sm font-semibold tracking-tight transition-all"
-                >
-                  {isEn ? 'Explore Preventative Guides' : '탈모 예방 정보 읽어보기'}
-                </button>
-              </div>
-
-              {/* 3초 안전 보증 팩트 띠지 */}
-              <div className="mt-10 pt-8 border-t border-slate-100 max-w-xl mx-auto flex items-center justify-center gap-6 text-slate-400">
-                <div className="flex items-center gap-1.5 text-xs">
-                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
-                  <span>{isEn ? 'No Sign-up / Sign-in' : '회원가입/로그인 없음'}</span>
-                </div>
-                <div className="w-1.5 h-1.5 rounded-full bg-slate-200" />
-                <div className="flex items-center gap-1.5 text-xs">
-                  <Activity className="w-4 h-4 text-blue-500" />
-                  <span>{isEn ? 'No Image Transmission (Auto Deleted)' : '서버 전송 없음 (브라우저 즉시 삭제)'}</span>
-                </div>
-              </div>
-
-              {/* 의료진 한계 경고 경구 */}
-              <p className="mt-6 text-[10px] sm:text-xs text-slate-400 max-w-lg mx-auto leading-normal">
-                ⚠️ <span className="font-medium text-slate-500">{isEn ? 'Notice:' : '주의:'}</span> {isEn ? 'The visual and contrast reference values generated are for private routine assessment purposes only. They do not constitute formal clinical diagnoses or medical advice from qualified dermatologists.' : '본 자가 진찰 분석은 공식 정밀 임상 피부과 처치 진단서를 대변하지 않으며, 평시 생활 체크를 유도하기 위한 참고용 자가 점검 프로그램입니다.'}
               </p>
             </div>
 
-            {/* HOW IT WORKS PROCESS CARD */}
-            <div className="space-y-6">
-              <div className="text-center">
-                <h3 className="font-sans font-bold text-xl sm:text-2xl text-slate-900 tracking-tight">
-                  {isEn ? 'Diagnostic Process in 3 Simple Steps' : '분석 프로세스는 단 3단계로 전개됩니다'}
-                </h3>
-                <p className="text-xs text-slate-400 mt-1">{isEn ? 'Convenient, quick, and permanently private.' : '간편하고, 빠르며, 완벽하게 개인 보호가 충족됩니다.'}</p>
+            {/* THREE PRIMARY TOOLS CARDS (3대 시그니처 콘텐츠 분리) */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8">
+              
+              {/* Tool 1: 탈모 자가 체크 */}
+              <div 
+                onClick={() => setCurrentTab('checker')}
+                className="bg-white border border-slate-200/70 rounded-3xl p-6 sm:p-7 shadow-xs hover:shadow-md hover:border-blue-400/80 transition-all duration-300 cursor-pointer flex flex-col justify-between group transform hover:-translate-y-1"
+              >
+                <div className="space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Activity className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-blue-600 block mb-1">Service 01</span>
+                    <h3 className="font-sans font-extrabold text-slate-900 text-lg leading-snug group-hover:text-blue-600 transition-colors">
+                      {isEn ? "Hair Loss Self Check" : "탈모 자가 체크"}
+                    </h3>
+                    <p className="text-slate-500 text-xs sm:text-[13px] mt-2 leading-relaxed">
+                      {isEn 
+                        ? "Scan your crown and frontal hairline density through dual photos to analyze thickness parameters instantly."
+                        : "정수리와 앞머리 사진 2장을 업로드하여 현재의 모발 굵기 및 명암 밀도 분산을 빠르고 명확하게 분석합니다."}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-2 border-t border-slate-100 pt-4 text-xs text-slate-500">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                      <span>{isEn ? "Crown Contrast Analyzer" : "정수리 가마 면적 비율 대비"}</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                      <span>{isEn ? "Line-by-line Density Mapping" : "이마 경계선 잔머리 밀도 보정"}</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
+                      <span>{isEn ? "Personalized Risk score" : "디테일한 자가 행동 점수 진단"}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pt-6">
+                  <span className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-colors">
+                    {isEn ? "Start Clinic Scan" : "체크 시작하기"}
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
               </div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {/* Step 1 */}
-                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-2xs hover:shadow-sm transition-all text-center">
-                  <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 font-bold text-sm">
-                    1
+              {/* Tool 2: 두피 나이 테스트 */}
+              <div 
+                onClick={() => setCurrentTab('scalp-age')}
+                className="bg-white border border-slate-200/70 rounded-3xl p-6 sm:p-7 shadow-xs hover:shadow-md hover:border-violet-400/80 transition-all duration-300 cursor-pointer flex flex-col justify-between group transform hover:-translate-y-1"
+              >
+                <div className="space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-violet-50 text-violet-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Activity className="w-6 h-6" />
                   </div>
-                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">{isEn ? 'Select Two Close-Ups' : '사진 2장 촬영 및 지정'}</h4>
-                  <p className="text-xs text-slate-500 leading-normal max-w-[210px] mx-auto">
-                    {isEn ? 'Follow the frame instructions to add clear photos of your crown and frontal hairline.' : '안내 가이드를 따라 정수리와 이마 앞머리 헤어라인 카메라 샷을 차례로 등록합니다.'}
-                  </p>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-violet-600 block mb-1">Service 02</span>
+                    <h3 className="font-sans font-extrabold text-slate-900 text-lg leading-snug group-hover:text-violet-600 transition-colors">
+                      {isEn ? "Scalp Age Calculator" : "두피 나이 테스트"}
+                    </h3>
+                    <p className="text-slate-500 text-xs sm:text-[13px] mt-2 leading-relaxed">
+                      {isEn 
+                        ? "Answer 10 short lifestyle-based questions to forecast your biological scalp health age and state grade."
+                        : "10가지 행동 및 유전성 문항을 거쳐 나의 예상 두피 생물학적 나이와 상태 등급을 정밀 진단받으세요."}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-2 border-t border-slate-100 pt-4 text-xs text-slate-500">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-violet-600 flex-shrink-0" />
+                      <span>{isEn ? "10 Science-Backed Items" : "10문항 결합형 정밀 체크"}</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-violet-600 flex-shrink-0" />
+                      <span>{isEn ? "Estimated Biological Age" : "생물학적 예상 나이 추정"}</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-violet-600 flex-shrink-0" />
+                      <span>{isEn ? "Personalized Habit TOP 3 Guides" : "유형 별 생활 양화 가이드 도출"}</span>
+                    </li>
+                  </ul>
                 </div>
-                {/* Step 2 */}
-                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-2xs hover:shadow-sm transition-all text-center">
-                  <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 font-bold text-sm">
-                    2
-                  </div>
-                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">{isEn ? 'On-Device Dynamic Scanning' : '온디바이스 가상 대조 수치 스캔'}</h4>
-                  <p className="text-xs text-slate-500 leading-normal max-w-[210px] mx-auto">
-                    {isEn ? 'Contrast and pixel shadow models calculate hair thinning scores directly on your device memory.' : '브라우저 디바이스 상에서 외부 전송 없이 대비도 및 모발 굵기 점유 지형을 즉석 연산합니다.'}
-                  </p>
-                </div>
-                {/* Step 3 */}
-                <div className="bg-white border border-slate-100 rounded-2xl p-6 shadow-2xs hover:shadow-sm transition-all text-center">
-                  <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center mx-auto mb-4 font-bold text-sm">
-                    3
-                  </div>
-                  <h4 className="font-semibold text-sm text-slate-800 mb-1.5">{isEn ? 'Receive Detailed Verdict' : '100점 만점 결과 즉시 렌더링'}</h4>
-                  <p className="text-xs text-slate-500 leading-normal max-w-[210px] mx-auto">
-                    {isEn ? 'Get your personalized risk level, breakdown score sheets, and tailored life remedies instantly.' : '정수리 및 앞머리 밀도 및 노출비가 기재된 위험 점수와 단계별 생활 조치지를 수거합니다.'}
-                  </p>
+
+                <div className="pt-6">
+                  <span className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-violet-600 hover:bg-violet-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-colors">
+                    {isEn ? "Calculate Scalp Age" : "나이 측정하기"}
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </span>
                 </div>
               </div>
+
+              {/* Tool 3: 머리 습관 점수 테스트 */}
+              <div 
+                onClick={() => setCurrentTab('hair-habit')}
+                className="bg-white border border-slate-200/70 rounded-3xl p-6 sm:p-7 shadow-xs hover:shadow-md hover:border-pink-400/80 transition-all duration-300 cursor-pointer flex flex-col justify-between group transform hover:-translate-y-1"
+              >
+                <div className="space-y-5">
+                  <div className="w-12 h-12 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center group-hover:scale-105 transition-transform">
+                    <Check className="w-6 h-6 text-pink-500" />
+                  </div>
+                  <div>
+                    <span className="text-[10px] uppercase tracking-wider font-extrabold text-pink-600 block mb-1">Service 03</span>
+                    <h3 className="font-sans font-extrabold text-slate-900 text-lg leading-snug group-hover:text-pink-600 transition-colors">
+                      {isEn ? "Hair Habits Score" : "머리 습관 점수 테스트"}
+                    </h3>
+                    <p className="text-slate-500 text-xs sm:text-[13px] mt-2 leading-relaxed">
+                      {isEn 
+                        ? "Audit your daily washing, blow-dry temperature, night meals, and sleep routines out of 100."
+                        : "매일 반복되는 샴푸, 풍건 온도, 야식, 수면, 단백질 식습관을 통해 나의 보존 능력 성적표를 확인해 보세요."}
+                    </p>
+                  </div>
+
+                  <ul className="space-y-2 border-t border-slate-100 pt-4 text-xs text-slate-500">
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-pink-600 flex-shrink-0" />
+                      <span>{isEn ? "0-100 Habits Rating Scale" : "0~100점 관리 역량 점수화"}</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-pink-600 flex-shrink-0" />
+                      <span>{isEn ? "Targeted Life Remedies" : "행동 패턴 별 정밀 1:1 조언"}</span>
+                    </li>
+                    <li className="flex items-center gap-2">
+                      <Check className="w-3.5 h-3.5 text-pink-600 flex-shrink-0" />
+                      <span>{isEn ? "Top 3 Actionable Actions" : "모발 보호를 위한 필수 행동 3선"}</span>
+                    </li>
+                  </ul>
+                </div>
+
+                <div className="pt-6">
+                  <span className="w-full inline-flex items-center justify-center gap-2 px-5 py-3 bg-pink-600 hover:bg-pink-700 text-white font-extrabold text-xs rounded-xl shadow-xs transition-colors">
+                    {isEn ? "Check Habits Score" : "습관 점수 보기"}
+                    <ArrowRight className="w-3.5 h-3.5 transform group-hover:translate-x-1 transition-transform" />
+                  </span>
+                </div>
+              </div>
+
+            </div>
+
+            {/* TRUST CRITERIAS INFO & WARNING */}
+            <div className="p-6 bg-slate-50 border border-slate-100 rounded-3xl max-w-3xl mx-auto space-y-4">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-400">
+                <div className="flex items-center gap-1.5 text-xs">
+                  <ShieldCheck className="w-4 h-4 text-emerald-500" />
+                  <span className="font-bold text-slate-600">{isEn ? 'No Sign-up / Permanent Privacy' : '가입 없음 ∙ 완벽 비공개 보장'}</span>
+                </div>
+                <div className="hidden sm:block w-1.5 h-1.5 rounded-full bg-slate-200" />
+                <div className="flex items-center gap-1.5 text-xs">
+                  <Activity className="w-4 h-4 text-blue-500" />
+                  <span className="font-bold text-slate-600">{isEn ? '100% On-Device Computational Processing' : '서버 미송출 ∙ 브라우저 메모리 연산'}</span>
+                </div>
+              </div>
+
+              <p className="text-[10px] sm:text-xs text-slate-400 text-center leading-relaxed">
+                ⚠️ <span className="font-medium text-slate-500">{isEn ? 'Medical Notice:' : '의학적 주의 사항:'}</span> {isEn ? 'All generated calculations, scores, or test findings are for general personal references only. They do not substitute official diagnosis or therapeutic suggestions from professional clinical dermatologists.' : '본 사이트에서 제공되는 모든 가이드, 위험성 지표 및 두피 나이/머리 습관 테스트 수치는 참고 목적의 자가 측정용 가이드라인이며, 피부과 전문의의 정밀 임상 평가를 대신할 수 없습니다.'}
+              </p>
             </div>
 
             {/* AD SENSE SLOT MIDDLE */}
@@ -1975,6 +2048,20 @@ Far too often, those experiencing hair thinning fall prey to viral unproven reme
             </div>
 
           </div>
+        )}
+
+        {/* ========================================================= */}
+        {/* 9. SCALP AGE TEST TAB (두피 나이 테스트) */}
+        {/* ========================================================= */}
+        {currentTab === 'scalp-age' && (
+          <ScalpAgePage onTabChange={setCurrentTab} />
+        )}
+
+        {/* ========================================================= */}
+        {/* 10. HAIR HABIT SCORE TEST TAB (머리 습관 점수 테스트) */}
+        {/* ========================================================= */}
+        {currentTab === 'hair-habit' && (
+          <HairHabitPage onTabChange={setCurrentTab} />
         )}
 
       </main>
