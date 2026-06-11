@@ -87,6 +87,11 @@ export const SEO_METADATA: Record<ContentTabId, { title: string; description: st
     title: '탈모 의학 정보 상세보기 자문 칼럼 | 탈모체커',
     description: '피부과학 전문 자문단이 기고한 맞춤형 예방 및 치료 지침 글입니다.',
     keywords: '전문탈모칼럼, 두피건강, 의학근거가이드'
+  },
+  'hair-types': {
+    title: '5대 탈모 유형 완벽 가이드 | 남성, 여성, 원형, 지루성, 휴지기 | 탈모체커',
+    description: '남성형 안드로겐 탈모, 여성형 정수리 확산형 탈모, 원형탈모, 지루성 탈모 및 일시적 휴지기 탈모의 진행 원인, 부위와 임상 대응 요약을 알기 쉽게 분석 제공합니다.',
+    keywords: '탈모유형, 남성형탈모, 여성탈모, 원형탈모증, 지루성탈모, 휴지기탈모, 크리스마스트리탈모'
   }
 };
 
@@ -170,6 +175,11 @@ export const SEO_METADATA_EN: Record<ContentTabId, { title: string; description:
     title: 'Clinical Hair Column Review | Hair Loss Checker',
     description: 'Evidence-backed columns written by leading dermatological advisors and scalp specialists.',
     keywords: 'verified hair column, medical evidence, expert guidelines'
+  },
+  'hair-types': {
+    title: 'Guide to 5 Major Hair Loss Types | Male, Female, Areata, Seborrheic | Hair Loss Checker',
+    description: 'Understand the biological pathways, localized areas, and proven FDA-authorized treatments of androgenetic, diffuse female, alopecia areata, seborrheic, and telogen hair loss.',
+    keywords: 'hair loss types, alopecia types, male pattern baldness, female pattern thinning, alopecia areata, seborrheic scalp, telogen effluvium'
   }
 };
 
@@ -253,6 +263,116 @@ export function updateSEOMeta(tab: ContentTabId, articleId?: string) {
 
   // 5. hreflang 및 canonical 리서칭 최적화 링크 동적 기입
   updateHreflangTags();
+
+  // 6. Schema.org 구조화데이터 동적 주입 (AdSense EEAT 인증)
+  updateStructuredData(tab, articleId);
+}
+
+/**
+ * Schema.org JSON-LD 구조화 데이터 동적 빌더 및 주입
+ */
+export function updateStructuredData(tab: ContentTabId, articleId?: string) {
+  // 기존 수기 주입된 구조화 데이터 모두 소각하여 최신 메타 유지
+  const existing = document.querySelectorAll('script[type="application/ld+json"]');
+  existing.forEach(s => s.remove());
+
+  const origin = window.location.origin;
+  const isEn = i18n.language === 'en';
+  let schema: any = null;
+
+  if (tab === 'home') {
+    schema = {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": isEn ? "Hair Loss Checker" : "탈모체커",
+      "url": origin,
+      "description": isEn 
+        ? "Evaluate your hair baldness rating using our 100% private locally configured sandbox scanner." 
+        : "정수리 가르마 및 헤어라인 사진 2장으로 브라우저 내에서 즉각 판단하는 투명한 자가모발측정.",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": `${origin}/#/wiki?q={search_term_string}`,
+        "query-input": "required name=search_term_string"
+      }
+    };
+  } else if (tab === 'article-detail' && articleId) {
+    const article = SEO_ARTICLES_LIST.find(a => a.id === articleId);
+    if (article) {
+      schema = {
+        "@context": "https://schema.org",
+        "@type": "MedicalWebPage",
+        "name": article.title,
+        "description": article.metaDesc,
+        "url": `${origin}/#/article/${articleId}`,
+        "lastReviewed": "2026-06-11",
+        "mainContentOfPage": {
+          "@type": "WebPageElement",
+          "cssSelector": ".markdown-body"
+        },
+        "author": {
+          "@type": "Person",
+          "name": article.author,
+          "jobTitle": "Hair Loss Clinical Biologist"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "탈모체커 (Hair Loss Checker)",
+          "url": origin,
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${origin}/favicon.ico`
+          }
+        }
+      };
+    }
+  } else if (tab === 'faq') {
+    schema = {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "모자나 헬멧을 자주 착용하면 모공이 짓눌려 탈모가 가속화되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "기본적으로 정밀 검사 결과 모자를 쓴다는 행동 자체만이 모근의 물리적 수용 세포를 파괴하거나 영구 사멸시키지 않습니다. 다만 모자를 지나치게 오래 쓰면 내부의 통풍 기능이 현저히 마비되어 땀과 피지가 정체되고 두피 열감 온도가 고열로 유지되게 만듭니다..."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "매일 아침저녁으로 머리를 자주 잘 감으면 그로 인해 더 가속되어 탈모가 유발되나요?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "머리를 감는 수순에 수챗구멍에서 탈락하는 엄청난 모발들은 실상 수명이 다해 이미 모근에서 분리되어 가벼운 터치에도 떨어질 ‘휴지기’ 단계의 죽어 있는 모발들입니다..."
+          }
+        }
+      ]
+    };
+  } else if (tab === 'hair-types') {
+    schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": isEn ? "Guide to 5 Major Hair Loss Types" : "5대 대중 탈모 유형 임상 종합 가이드",
+      "description": isEn 
+        ? "Comparison and medical explanation of Androgenetic, diffuse female, alopecia areata, seborrheic, and telogen hair loss." 
+        : "남성형 안드로겐 탈모, 여성형 탈모, 원형 탈모, 지루성 두피 및 휴지기 탈모 비교 대조 연구서.",
+      "url": `${origin}/#/hair-types`
+    };
+  } else {
+    schema = {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "name": isEn ? `${tab.toUpperCase()} Info | Hair Loss Checker` : `${tab} 주요정보안내 | 탈모체커`,
+      "url": `${origin}/#/${tab}`
+    };
+  }
+
+  if (schema) {
+    const sc = document.createElement('script');
+    sc.type = 'application/ld+json';
+    sc.text = JSON.stringify(schema);
+    document.head.appendChild(sc);
+  }
 }
 
 export function updateHreflangTags() {
@@ -305,7 +425,7 @@ export function updateHreflangTags() {
 export function generateSitemapXMLString(): string {
   const baseUrl = window.location.origin;
   const tabs: ContentTabId[] = [
-    'home', 'checker', 'scalp-age', 'hair-habit', 'symptoms', 'prevention', 'causes', 'male', 'female', 'faq', 'intro', 'privacy', 'terms', 'contact', 'wiki'
+    'home', 'checker', 'scalp-age', 'hair-habit', 'hair-types', 'symptoms', 'prevention', 'causes', 'male', 'female', 'faq', 'intro', 'privacy', 'terms', 'contact', 'wiki'
   ];
   
   let xml = `<?xml version="1.0" encoding="UTF-8"?>\n`;

@@ -57,6 +57,7 @@ export default function Header({ currentTab, onTabChange }: HeaderProps) {
 
   const navItems: { id: ContentTabId; label: string; icon: React.ReactNode }[] = [
     { id: 'wiki', label: t('header.nav_wiki'), icon: <BookOpen className="w-4 h-4 text-emerald-500" /> },
+    { id: 'hair-types', label: t('header.nav_hair_types'), icon: <Activity className="w-4 h-4 text-emerald-500" /> },
     { id: 'symptoms', label: t('header.nav_symptoms'), icon: <FileText className="w-4 h-4" /> },
     { id: 'faq', label: t('header.nav_faq'), icon: <HelpCircle className="w-4 h-4" /> }
   ];
