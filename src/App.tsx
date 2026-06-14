@@ -11,6 +11,7 @@ import {
   Sparkles, 
   ChevronDown, 
   AlertTriangle, 
+  AlertCircle,
   CheckCircle, 
   Download, 
   RefreshCw, 
@@ -190,6 +191,9 @@ Article 3 (Data Ownership & Immediate Erasure)
   // 분석 결과 데이터
   const [analysisResult, setAnalysisResult] = useState<AnalysisResult | null>(null);
 
+  // AI 연동 이미지 적합성 검증 상태
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   // FAQ 아코디언 오픈 상태
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
 
@@ -342,62 +346,149 @@ Article 3 (Data Ownership & Immediate Erasure)
     }
   }, [currentTab, activeArticleId]);
 
+  // 파일 객체의 Base64 인코더 유틸식
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  };
+
   // 3. 탈모 이미지 정밀 모니터링 분석 버튼 트리거
   const handleStartAnalysis = async () => {
     if (!vertexFile || !hairlineFile) return;
 
     const isEn = i18n.language === 'en';
+    setValidationError(null);
     setAnalysisStatus('analyzing');
-    setCurrentProgress(5);
+    setCurrentProgress(2);
     setProgressStageText(
       isEn
-        ? 'Extracting scalp surface and hairline pixel boundaries...'
-        : '두피 표면 및 헤어라인 픽셀 경계선 추출 중...'
+        ? 'AI and clinical verification of uploaded photos in progress...'
+        : '업로드된 정수리 및 이마라인 사진의 인공지능 검증 중...'
     );
 
-    // 분석 로딩 게이지 단계별 멘트 가동 시뮬레이션
-    const stages = isEn
-      ? [
-          { prg: 20, txt: 'Detecting sebum distribution and contrast spectrum pixels...' },
-          { prg: 45, txt: 'Extracting hair-to-scalp density ratio & statistics...' },
-          { prg: 68, txt: 'Measuring hairline asymmetrical curvature...' },
-          { prg: 88, txt: 'Simulating hair miniaturization index...' },
-          { prg: 97, txt: 'Compiling assessment scores and preparing image disposal...' },
-          { prg: 100, txt: 'Analysis completed securely!' }
-        ]
-      : [
-          { prg: 20, txt: '정수리 피지 분포 및 대비 스펙트럼 픽셀 감지 중...' },
-          { prg: 45, txt: '두피 대 모발 명도 분포비 추출 및 표준편차 연산 중...' },
-          { prg: 68, txt: '이마 헤어라인 좌우 편차 및 대칭 비율 계산 중...' },
-          { prg: 88, txt: 'M자 진행 가시 가능성 굴곡 수학적 추론 중...' },
-          { prg: 97, txt: '종합 결과 진단 스코어 병합 및 소각 준비 완료...' },
-          { prg: 100, txt: '안전 보존 분석 완료!' }
-        ];
+    try {
+      // 1 단계: 이미지를 Base64로 인코딩
+      const [vertexBase64, hairlineBase64] = await Promise.all([
+        fileToBase64(vertexFile),
+        fileToBase64(hairlineFile),
+      ]);
 
-    let currentIdx = 0;
-    const interval = setInterval(async () => {
-      if (currentIdx < stages.length) {
-        const stage = stages[currentIdx];
-        setCurrentProgress(stage.prg);
-        setProgressStageText(stage.txt);
-        currentIdx++;
-      } else {
-        clearInterval(interval);
-        
-        // 이미지 경로 데이터 추출 및 분석 개시
-        const vertexUrl = URL.createObjectURL(vertexFile);
-        const hairlineUrl = URL.createObjectURL(hairlineFile);
+      setCurrentProgress(8);
+      setProgressStageText(
+        isEn
+          ? 'Contacting AI clinical verification engine...'
+          : 'AI 정밀 진단 시스템으로 적합성 판독 요청 중...'
+      );
 
-        const result = await analyzeHairLossImages(vertexUrl, hairlineUrl);
-        setAnalysisResult(result);
-        
-        // 브라우저 캔버스 사용 완료 후 가상 메모리 해제
-        URL.revokeObjectURL(vertexUrl);
-        URL.revokeObjectURL(hairlineUrl);
+      // 2 단계: 서버 API를 통해 이미지 무관성 여부 판정
+      const [vertexValidResponse, hairlineValidResponse] = await Promise.all([
+        fetch('/api/validate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: vertexBase64,
+            mimeType: vertexFile.type,
+            expectedPart: 'vertex',
+          }),
+        }).then(res => res.json()).catch(() => ({ isValid: true, reason: '' })),
+        fetch('/api/validate-image', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            image: hairlineBase64,
+            mimeType: hairlineFile.type,
+            expectedPart: 'hairline',
+          }),
+        }).then(res => res.json()).catch(() => ({ isValid: true, reason: '' })),
+      ]);
 
-        setAnalysisStatus('completed');
+      // 정수리 적합성 실패 케이스
+      if (!vertexValidResponse.isValid) {
+        setAnalysisStatus('idle');
+        setValidationError(
+          isEn
+            ? `Vertex photo verification failed: ${vertexValidResponse.reason || 'The uploaded image is not a scalp/crown. Please upload a clear view of your crown/vertex.'}`
+            : `정수리 사진 검증 실패: ${vertexValidResponse.reason || '올려주신 사진은 올바른 정수리 영역이 아닌 사물/문서 혹은 다른 신체 부위 이미지로 식별되었습니다. 정수리 가마가 잘 드러나게 촬영한 사진을 다시 등록해주세요.'}`
+        );
+        return;
       }
-    }, 700);
+
+      // 이마라인 적합성 실패 케이스
+      if (!hairlineValidResponse.isValid) {
+        setAnalysisStatus('idle');
+        setValidationError(
+          isEn
+            ? `Hairline photo verification failed: ${hairlineValidResponse.reason || 'The uploaded image is not a forehead/hairline. Please upload a clear view of your forehead hairline.'}`
+            : `이마라인 사진 검증 실패: ${hairlineValidResponse.reason || '올려주신 사진은 전면 이마와 헤어라인 영역이 노출되지 않은 사진으로 식별되었습니다. 이마와 탈모선(앞이마)이 명확히 드러나게 촬영한 사진을 다시 등록해주세요.'}`
+        );
+        return;
+      }
+
+      // 3 단계: 통과 완료 시 기존의 픽셀 전방 디지털 로직 연계 작동
+      setCurrentProgress(15);
+      setProgressStageText(
+        isEn
+          ? 'AI Verification complete! Launching diagnostic scanning...'
+          : 'AI 원본 대조 통과 완료! 정밀 모니터링 분석을 개시합니다...'
+      );
+
+      // 분석 로딩 게이지 단계별 멘트 가동 시뮬레이션
+      const stages = isEn
+        ? [
+            { prg: 30, txt: 'Detecting sebum distribution and contrast spectrum pixels...' },
+            { prg: 50, txt: 'Extracting hair-to-scalp density ratio & statistics...' },
+            { prg: 72, txt: 'Measuring hairline asymmetrical curvature...' },
+            { prg: 88, txt: 'Simulating hair miniaturization index...' },
+            { prg: 97, txt: 'Compiling assessment scores and preparing image disposal...' },
+            { prg: 100, txt: 'Analysis completed securely!' }
+          ]
+        : [
+            { prg: 30, txt: '정수리 피지 분포 및 대비 스펙트럼 픽셀 감지 중...' },
+            { prg: 50, txt: '두피 대 모발 명도 분포비 추출 및 표준편차 연산 중...' },
+            { prg: 72, txt: '이마 헤어라인 좌우 편차 및 대칭 비율 계산 중...' },
+            { prg: 88, txt: 'M자 진행 가시 가능성 굴곡 수학적 추론 중...' },
+            { prg: 97, txt: '종합 결과 진단 스코어 병합 및 소각 준비 완료...' },
+            { prg: 100, txt: '안전 보존 분석 완료!' }
+          ];
+
+      let currentIdx = 0;
+      const interval = setInterval(async () => {
+        if (currentIdx < stages.length) {
+          const stage = stages[currentIdx];
+          setCurrentProgress(stage.prg);
+          setProgressStageText(stage.txt);
+          currentIdx++;
+        } else {
+          clearInterval(interval);
+          
+          // 이미지 경로 데이터 추출 및 분석 개시
+          const vertexUrl = URL.createObjectURL(vertexFile);
+          const hairlineUrl = URL.createObjectURL(hairlineFile);
+
+          const result = await analyzeHairLossImages(vertexUrl, hairlineUrl);
+          setAnalysisResult(result);
+          
+          // 브라우저 캔버스 사용 완료 후 가상 메모리 해제
+          URL.revokeObjectURL(vertexUrl);
+          URL.revokeObjectURL(hairlineUrl);
+
+          setAnalysisStatus('completed');
+        }
+      }, 700);
+
+    } catch (err: any) {
+      console.error(err);
+      setAnalysisStatus('idle');
+      setValidationError(
+        isEn
+          ? 'An error occurred during verification. Please make sure the files are valid and try again.'
+          : '사진 검증 중 장애가 생겼습니다. 이미지 형태가 적법한지 재차 확인하시고 완료해 주십시오.'
+      );
+    }
   };
 
   // 4. 재측정 및 메모리 즉각 완전 삭제 환원
@@ -773,6 +864,30 @@ Article 3 (Data Ownership & Immediate Erasure)
                     {t('checker.desc')}
                   </p>
                 </div>
+
+                {/* AI 연동 이미지 적합성 검증 실패 알림 배너 */}
+                {validationError && (
+                  <div className="p-5 bg-rose-50 border border-rose-200/60 rounded-2xl flex flex-col sm:flex-row items-start justify-between gap-4 text-rose-950 animate-fade-in shadow-2xs">
+                    <div className="flex items-start gap-3">
+                      <AlertCircle className="w-5 h-5 text-rose-500 shrink-0 mt-0.5" />
+                      <div className="space-y-1">
+                        <p className="font-extrabold text-sm tracking-tight text-rose-900">
+                          {isEn ? 'AI Verification Result: Not Suitable' : 'AI 촬영 원본 검증 불가 안내'}
+                        </p>
+                        <p className="text-xs text-rose-800 leading-relaxed font-semibold">
+                          {validationError}
+                        </p>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setValidationError(null)}
+                      className="text-xs text-rose-700 hover:text-rose-900 font-extrabold cursor-pointer px-4 py-2 bg-white hover:bg-rose-100 border border-rose-200 rounded-xl shadow-3xs transition-all shrink-0 self-end sm:self-start"
+                    >
+                      {isEn ? 'Dismiss' : '확인'}
+                    </button>
+                  </div>
+                )}
 
                 {/* 2열 스퀘어 이미지 피커 기획 */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 min-h-[300px]">
